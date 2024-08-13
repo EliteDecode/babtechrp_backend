@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema<IUser>(
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 		confirmPassword: { type: String, required: true },
-		phone: { type: String, required: true },
-		address: { type: String, required: true },
+		phone: { type: String, required: false },
+		address: { type: String, required: false },
 		isEmailVerified: { type: Boolean, default: false },
 		isSuspended: { type: Boolean, default: false }
 	},

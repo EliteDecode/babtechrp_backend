@@ -5,8 +5,8 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	confirmPassword: string;
-	phone: string;
-	address: string;
+	phone?: string;
+	address?: string;
 	isEmailVerified: boolean;
 	isSuspended: boolean;
 }
