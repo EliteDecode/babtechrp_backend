@@ -29,8 +29,11 @@ export const loginValidationSchema = Joi.object({
 });
 
 export const emailVerificationSchema = Joi.object({
-	token: Joi.string().required().messages({
-		'string.empty': 'Verification token is required.'
+	authCode: Joi.number().required().messages({
+		'string.empty': 'Verification code is required.'
+	}),
+	userId: Joi.string().required().messages({
+		'string.empty': 'User ID is required.'
 	})
 });
 
@@ -73,5 +76,21 @@ export const deleteAccountSchema = Joi.object({
 export const suspendAccountSchema = Joi.object({
 	reason: Joi.string().optional().messages({
 		'string.empty': 'Reason for suspension should be provided.'
+	})
+});
+
+export const logoutValidationSchema = Joi.object({
+	refreshToken: Joi.string().required().messages({
+		'string.empty': 'Refresh token is required.'
+	})
+});
+
+export const resetPasswordSchema = Joi.object({
+	password: Joi.string().min(8).required().messages({
+		'string.empty': 'Password is required.',
+		'string.min': 'Password must be at least 8 characters long.'
+	}),
+	confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
+		'any.only': 'Confirm password does not match.'
 	})
 });

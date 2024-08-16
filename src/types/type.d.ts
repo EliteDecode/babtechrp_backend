@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { IUser } from './interfaces/IUser';
+import { IUser } from '../interfaces/IUser';
 
 declare module 'express-serve-static-core' {
 	interface Request {

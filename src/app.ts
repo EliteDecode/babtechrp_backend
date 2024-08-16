@@ -3,6 +3,8 @@ import { loggingHandler } from './middleware/loggingHandler';
 import { corsHandler } from './middleware/corsHandler';
 import { errorHandler } from './middleware/errorHandler';
 import routes from './routes/v1';
+import cron from 'node-cron';
+import { cleanupExpiredTokens } from './helpers/cleanUpExpiredUser';
 
 const application = express();
 
@@ -23,7 +25,12 @@ logging.info('Errors Handling');
 logging.info('-------------------------------------------');
 application.use(errorHandler);
 
-// v1 api routes
-application.use('/v1', routes);
+//v1 api routes
+application.use('/bst/v1', routes);
+
+//Cleanup
+cron.schedule('* * * * *', async () => {
+	await cleanupExpiredTokens();
+});
 
 export { application };

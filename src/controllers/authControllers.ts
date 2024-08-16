@@ -1,11 +1,10 @@
-import { Request, Response } from 'express';
-import { register } from '../services/authServices';
+import { handleRequest } from '../helpers/handleRequest';
+import { forgot_password, login_user, logout_user, register_user, reset_password, verify_user_token } from '../services/authServices';
 
-export const registerUser = async (err: Error, req: Request, res: Response) => {
-	try {
-		const user = await register(req.body);
-		res.status(201).json(user);
-	} catch (error) {
-		res.status(400).json({ error: err.message });
-	}
-};
+// Exporting controllers using the higher-order function
+export const registerUser = handleRequest(register_user);
+export const verifyUserToken = handleRequest(verify_user_token);
+export const loginUser = handleRequest(login_user);
+export const logoutUser = handleRequest(logout_user);
+export const forgotPassword = handleRequest(forgot_password);
+export const resetPassword = handleRequest(reset_password);

@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema<IUser>(
 		phone: { type: String, required: false },
 		address: { type: String, required: false },
 		isEmailVerified: { type: Boolean, default: false },
-		isSuspended: { type: Boolean, default: false }
+		isSuspended: { type: Boolean, default: false },
+		referralCode: { type: String, required: false }
 	},
 	{
 		timestamps: true

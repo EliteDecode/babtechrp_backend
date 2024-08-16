@@ -7,6 +7,12 @@ export interface IUser extends Document {
 	confirmPassword: string;
 	phone?: string;
 	address?: string;
-	isEmailVerified: boolean;
-	isSuspended: boolean;
+	isEmailVerified?: boolean;
+	isSuspended?: boolean;
+	referralCode?: string;
+}
+
+export interface IUserLogin extends Document {
+	email: string;
+	password: string;
 }
