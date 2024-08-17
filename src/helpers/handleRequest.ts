@@ -7,8 +7,10 @@ export const handleRequest = (serviceFunction: (body: any) => Promise<any>) => {
 		try {
 			const params = {
 				data: req.body,
-				user: req.user
+				user: req.user,
+				query: req.params
 			};
+			console.log(params.query);
 			const data = await serviceFunction(params);
 			res.status(200).json(data);
 		} catch (error: any) {

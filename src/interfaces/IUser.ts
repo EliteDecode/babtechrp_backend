@@ -12,6 +12,18 @@ export interface IUser extends Document {
 	referralCode?: string;
 }
 
+export interface IUpdateUser extends Document {
+	fullname?: string;
+	phone?: string;
+	address?: string;
+}
+
+export interface IChangePassword {
+	newPassword: string;
+	confirmNewPassword: string;
+	oldPassword: string;
+}
+
 export interface IUserLogin extends Document {
 	email: string;
 	password: string;

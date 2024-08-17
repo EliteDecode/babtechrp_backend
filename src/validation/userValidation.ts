@@ -31,9 +31,6 @@ export const loginValidationSchema = Joi.object({
 export const emailVerificationSchema = Joi.object({
 	authCode: Joi.number().required().messages({
 		'string.empty': 'Verification code is required.'
-	}),
-	userId: Joi.string().required().messages({
-		'string.empty': 'User ID is required.'
 	})
 });
 
@@ -55,14 +52,14 @@ export const updateEmailSchema = Joi.object({
 });
 
 export const updatePasswordSchema = Joi.object({
-	currentPassword: Joi.string().required().messages({
+	oldPassword: Joi.string().required().messages({
 		'string.empty': 'Current password is required.'
 	}),
 	newPassword: Joi.string().min(8).required().messages({
 		'string.empty': 'New password is required.',
 		'string.min': 'New password must be at least 8 characters long.'
 	}),
-	confirmPassword: Joi.any().equal(Joi.ref('newPassword')).required().messages({
+	confirmNewPassword: Joi.any().equal(Joi.ref('newPassword')).required().messages({
 		'any.only': 'Confirm password does not match.'
 	})
 });

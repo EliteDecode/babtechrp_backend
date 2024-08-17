@@ -1,19 +1,25 @@
+//1. Regsiter User
+//2. Verify User
+//3. Login User
+//4. Logout
+//5. Forgot Password
+//6. Reset Password
+
 import jwtUtils from '../utils/jwtUtils';
 import User from '../models/userModel';
 import tokenModel from '../models/tokenModel';
 import bcrypt from 'bcrypt';
-import { IUser, IUserLogin } from '../interfaces/IUser';
-import { JwtPayload } from 'jsonwebtoken';
 import sendMail from '../utils/emailUtils';
 import authTokenModel from '../models/authTokenModel';
 import { cleanupTokensAfterFailedEmailMessage } from '../helpers/cleanUpExpiredUser';
 import { IToken } from '../interfaces/IToken';
 import { generateReferralNumber } from '../helpers/generateReferralCode';
+import { IParams } from '../interfaces/IParams';
 
-export const register_user = async (params: { data: IUser; user: IUser }) => {
+export const register_user = async (params: IParams) => {
 	try {
 		// Extract user data from req.body
-		const userData = params.data as IUser;
+		const userData = params.data;
 
 		// Check if the user already exists
 		const existingUser = await User.findOne({ email: userData.email.toLowerCase() });
@@ -34,7 +40,7 @@ export const register_user = async (params: { data: IUser; user: IUser }) => {
 
 		// Create a new user
 		const newUser = new User({
-			...userData,
+			fullname: userData.fullname,
 			email: userData.email.toLowerCase(),
 			password: hashedPassword,
 			isEmailVerified: false,
@@ -68,25 +74,23 @@ export const register_user = async (params: { data: IUser; user: IUser }) => {
 			throw new Error(`Error sending verification email: ${emailError.message}`);
 		}
 
-		// Remove sensitive fields before returning user data
-		const { password, confirmPassword, ...userWithoutPassword } = newUser.toObject();
-
 		return {
 			success: true,
 			message: 'User registered successfully. Please verify your email using the code sent to your email.',
-			data: userWithoutPassword
+			data: { _id: newUser._id }
 		};
 	} catch (error: any) {
 		throw new Error(`Error registering user ${error.message}`);
 	}
 };
 
-export const verify_user_token = async (params: { data: IToken }) => {
+export const verify_user_token = async (params: { data: IToken; query: { userId: string } }) => {
 	try {
-		const userAuthInfo: IToken = params.data;
+		const userAuthInfo = params.data;
+		const { userId } = params.query;
 
 		const fetchUserToken = await authTokenModel.findOne({
-			userId: userAuthInfo.userId,
+			userId: userId,
 			expiresAt: { $gt: new Date() }
 		});
 
@@ -113,7 +117,7 @@ export const verify_user_token = async (params: { data: IToken }) => {
 	}
 };
 
-export const login_user = async (params: { data: IUserLogin }) => {
+export const login_user = async (params: IParams) => {
 	const { email, password } = params.data;
 
 	// Find the user by email
@@ -135,11 +139,12 @@ export const login_user = async (params: { data: IUserLogin }) => {
 	const expiresAt = new Date(Date.now() + refreshTokenExpiresIn);
 
 	try {
-		await tokenModel.create({
-			userId: user._id,
-			refreshToken: tokens.refreshToken,
-			expiresAt: expiresAt
-		});
+		const checkExistingTokens = await tokenModel.findOne({ userId: user._id });
+
+		if (checkExistingTokens) {
+			await tokenModel.findOneAndUpdate({ userId: user._id }, { refreshToken: tokens.refreshToken, expiresAt: expiresAt });
+		}
+		await tokenModel.create({ userId: user._id, refreshToken: tokens.refreshToken, expiresAt: expiresAt });
 		return {
 			success: true,
 			message: 'Login successful',
@@ -172,7 +177,7 @@ export const logout_user = async (params: { data: { refreshToken: string } }) =>
 	}
 };
 
-export const forgot_password = async (params: { data: { email: string } }) => {
+export const forgot_password = async (params: IParams) => {
 	const { email } = params.data;
 
 	const fetchUser = await User.findOne({ email: email.toLowerCase() });
@@ -204,7 +209,7 @@ export const forgot_password = async (params: { data: { email: string } }) => {
 		return {
 			success: true,
 			message: 'Password reset email sent successfully',
-			data: resetToken
+			data: null
 		};
 	} catch (error) {
 		await cleanupTokensAfterFailedEmailMessage({ id: fetchUser._id as string });
@@ -212,8 +217,8 @@ export const forgot_password = async (params: { data: { email: string } }) => {
 	}
 };
 
-export const reset_password = async (params: any) => {
-	const { password, confirmPassword } = params.data;
+export const reset_password = async (params: IParams) => {
+	const { password } = params.data;
 	const { id } = params.user;
 
 	const fetchUser = await User.findById(id);
