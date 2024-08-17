@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './authRoutes';
 import userRoute from './userRoutes';
+import referralRoute from './referralRoutes';
 
 const router = express.Router();
 
@@ -12,6 +13,10 @@ const defaultRoutes = [
 	{
 		path: '/user',
 		route: userRoute
+	},
+	{
+		path: '/referral',
+		route: referralRoute
 	}
 ];
 
