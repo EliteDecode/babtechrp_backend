@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './authRoutes';
 import userRoute from './userRoutes';
 import referralRoute from './referralRoutes';
+import adminRoute from './adminRoutes';
 
 const router = express.Router();
 
@@ -17,6 +18,10 @@ const defaultRoutes = [
 	{
 		path: '/referral',
 		route: referralRoute
+	},
+	{
+		path: '/admin/auth',
+		route: adminRoute
 	}
 ];
 

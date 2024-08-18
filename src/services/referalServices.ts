@@ -99,11 +99,11 @@ export const update_single_referral = async (params: IParams) => {
 
 		return {
 			success: true,
-			message: 'Referral fetched successfully',
+			message: 'Referral updated successfully',
 			data: referral
 		};
 	} catch (error: any) {
-		throw new Error('Error fetching referral: ' + error.message);
+		throw new Error('Error updating referral: ' + error.message);
 	}
 };
 
@@ -111,8 +111,6 @@ export const delete_single_referral = async (params: IParams) => {
 	try {
 		const { id } = params.user;
 		const { userId, referralId } = params.query;
-
-		console.log(id, userId);
 
 		if (id !== userId) {
 			throw new Error('You are not authorized to perform this action');

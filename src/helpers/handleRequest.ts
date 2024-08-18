@@ -8,6 +8,7 @@ export const handleRequest = (serviceFunction: (body: any) => Promise<any>) => {
 			const params = {
 				data: req.body,
 				user: req.user,
+				admin: req.admin,
 				query: req.params
 			};
 			console.log(params.query);

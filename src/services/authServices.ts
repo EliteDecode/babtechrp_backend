@@ -134,11 +134,10 @@ export const login_user = async (params: IParams) => {
 
 	const tokens = jwtUtils.generateTokens(user);
 
-	// Set refresh token expiration to 30 days
-	const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-	const expiresAt = new Date(Date.now() + refreshTokenExpiresIn);
-
 	try {
+		// Set refresh token expiration to 30 days
+		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+		const expiresAt = new Date(Date.now() + refreshTokenExpiresIn);
 		const checkExistingTokens = await tokenModel.findOne({ userId: user._id });
 
 		if (checkExistingTokens) {

@@ -2,25 +2,46 @@ import { Request, Response, NextFunction } from 'express';
 import jwtUtils from '../utils/jwtUtils';
 import { IUser } from '../interfaces/IUser';
 import { JwtPayload } from 'jsonwebtoken';
+import userModel from '../models/userModel';
 
 // Extending the Request interface
 interface AuthenticatedRequest extends Request {
 	user?: IUser;
 }
 
-const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-		const token = req.headers.authorization.split(' ')[1];
-		if (!token) return res.status(401).send('Access Denied');
 		try {
+			const data = {
+				success: false,
+				message: 'Access Denied',
+				data: null
+			};
+			const token = req.headers.authorization.split(' ')[1];
+			if (!token) return res.status(401).send(data);
+
 			const verified = jwtUtils.verifyToken(token) as JwtPayload & { id: IUser['_id'] };
+			const fetchuser = await userModel.findById(verified.id);
+			if (!fetchuser) return res.status(401).send(data);
 			req.user = verified as IUser;
 			next();
 		} catch (err) {
-			res.status(400).send('Invalid Token');
+			const data = {
+				success: false,
+				message: 'Invalid Token',
+				data: null
+			};
+
+			res.status(400).send(data);
 		}
 	} else {
-		res.status(401).send('Access Denied');
+		const data = {
+			success: false,
+			message: 'Access Denied',
+			data: null
+		};
+
+		res.status(401).send(data);
 	}
 };
 
