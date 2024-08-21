@@ -11,6 +11,10 @@ const verifyToken = (token: string) => {
 	return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
 };
 
+const verifyRefreshToken = (token: string) => {
+	return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
+};
+
 const generateResetToken = (user: IUser) => {
 	return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1h' });
 };
@@ -30,4 +34,4 @@ const verifyAdminToken = (token: string) => {
 	return jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET!);
 };
 
-export default { generateTokens, verifyToken, refreshTokens, generateResetToken, generateAdminTokens, verifyAdminToken };
+export default { generateTokens, verifyToken, refreshTokens, generateResetToken, generateAdminTokens, verifyAdminToken, verifyRefreshToken };

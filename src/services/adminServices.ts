@@ -7,7 +7,7 @@
 import bcrypt from 'bcrypt';
 import jwtUtils from '../utils/jwtUtils';
 import Admin from '../models/adminModel';
-import { IAdmin, IAdminLogin } from '../interfaces/IAdmin';
+import { IAdminLogin } from '../interfaces/IAdmin';
 import { IParams } from '../interfaces/IParams';
 import tokenModel from '../models/tokenModel';
 

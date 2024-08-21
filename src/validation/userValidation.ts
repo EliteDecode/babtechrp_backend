@@ -82,6 +82,12 @@ export const logoutValidationSchema = Joi.object({
 	})
 });
 
+export const requestAccessTokenSchema = Joi.object({
+	refreshToken: Joi.string().required().messages({
+		'string.empty': 'Refresh token is required.'
+	})
+});
+
 export const resetPasswordSchema = Joi.object({
 	password: Joi.string().min(8).required().messages({
 		'string.empty': 'Password is required.',
@@ -89,5 +95,8 @@ export const resetPasswordSchema = Joi.object({
 	}),
 	confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
 		'any.only': 'Confirm password does not match.'
+	}),
+	token: Joi.string().required().messages({
+		'string.empty': 'Token is required.'
 	})
 });

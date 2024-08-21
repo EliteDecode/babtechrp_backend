@@ -6,9 +6,18 @@ import {
 	loginValidationSchema,
 	logoutValidationSchema,
 	registerValidationSchema,
+	requestAccessTokenSchema,
 	resetPasswordSchema
 } from '../../validation/userValidation';
-import { forgotPassword, loginUser, logoutUser, registerUser, resetPassword, verifyUserToken } from '../../controllers/authControllers';
+import {
+	forgotPassword,
+	loginUser,
+	logoutUser,
+	registerUser,
+	requestAccessToken,
+	resetPassword,
+	verifyUserToken
+} from '../../controllers/authControllers';
 
 import authMiddleware from '../../middleware/authHandler';
 
@@ -17,8 +26,9 @@ const authRoute = express.Router();
 authRoute.post('/register', validateRequest(registerValidationSchema), registerUser);
 authRoute.post('/verify/:userId', validateRequest(emailVerificationSchema), verifyUserToken);
 authRoute.post('/login', validateRequest(loginValidationSchema), loginUser);
-authRoute.delete('/logout', validateRequest(logoutValidationSchema), logoutUser);
+authRoute.post('/logout', validateRequest(logoutValidationSchema), logoutUser);
 authRoute.post('/forgot-password', validateRequest(forgotPasswordSchema), forgotPassword);
-authRoute.post('/reset-password', authMiddleware, validateRequest(resetPasswordSchema), resetPassword);
+authRoute.post('/reset-password', validateRequest(resetPasswordSchema), resetPassword);
+authRoute.post('/refresh-token', validateRequest(requestAccessTokenSchema), requestAccessToken);
 
 export default authRoute;

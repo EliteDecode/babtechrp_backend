@@ -15,6 +15,8 @@ import { cleanupTokensAfterFailedEmailMessage } from '../helpers/cleanUpExpiredU
 import { IToken } from '../interfaces/IToken';
 import { generateReferralNumber } from '../helpers/generateReferralCode';
 import { IParams } from '../interfaces/IParams';
+import { JwtPayload } from 'jsonwebtoken';
+import { IUser } from '../interfaces/IUser';
 
 export const register_user = async (params: IParams) => {
 	try {
@@ -77,7 +79,7 @@ export const register_user = async (params: IParams) => {
 		return {
 			success: true,
 			message: 'User registered successfully. Please verify your email using the code sent to your email.',
-			data: { _id: newUser._id }
+			data: { _id: newUser._id, email: newUser.email }
 		};
 	} catch (error: any) {
 		throw new Error(`Error registering user ${error.message}`);
@@ -98,7 +100,7 @@ export const verify_user_token = async (params: { data: IToken; query: { userId:
 			throw new Error('Verification code is incorrect');
 		}
 
-		const isMatch = userAuthInfo.authCode && (await bcrypt.compare(userAuthInfo.authCode, fetchUserToken.authCode));
+		const isMatch = userAuthInfo.authCode && (await bcrypt.compare(userAuthInfo.authCode.toString(), fetchUserToken.authCode));
 		if (!isMatch) {
 			throw new Error('Invalid or expired verification code');
 		}
@@ -120,11 +122,14 @@ export const verify_user_token = async (params: { data: IToken; query: { userId:
 export const login_user = async (params: IParams) => {
 	const { email, password } = params.data;
 
-	// Find the user by email
 	const user = await User.findOne({ email: email.toLowerCase() });
 
 	if (!user) {
 		throw new Error('User not found');
+	}
+
+	if (user.isSuspended) {
+		throw new Error('Your account has been suspended');
 	}
 
 	const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -135,15 +140,17 @@ export const login_user = async (params: IParams) => {
 	const tokens = jwtUtils.generateTokens(user);
 
 	try {
-		// Set refresh token expiration to 30 days
-		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000;
 		const expiresAt = new Date(Date.now() + refreshTokenExpiresIn);
+
 		const checkExistingTokens = await tokenModel.findOne({ userId: user._id });
 
 		if (checkExistingTokens) {
 			await tokenModel.findOneAndUpdate({ userId: user._id }, { refreshToken: tokens.refreshToken, expiresAt: expiresAt });
+		} else {
+			await tokenModel.create({ userId: user._id, refreshToken: tokens.refreshToken, expiresAt: expiresAt });
 		}
-		await tokenModel.create({ userId: user._id, refreshToken: tokens.refreshToken, expiresAt: expiresAt });
+
 		return {
 			success: true,
 			message: 'Login successful',
@@ -153,9 +160,10 @@ export const login_user = async (params: IParams) => {
 			}
 		};
 	} catch (error: any) {
-		throw new Error(`Error logging in, please try again`);
+		throw new Error('Error logging in, please try again');
 	}
 };
+
 export const logout_user = async (params: { data: { refreshToken: string } }) => {
 	const { refreshToken } = params.data;
 
@@ -192,12 +200,17 @@ export const forgot_password = async (params: IParams) => {
 
 	try {
 		const resetToken = jwtUtils.generateResetToken(fetchUser);
-		const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+		const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password/${resetToken}`;
 
 		await sendMail({
 			email: fetchUser.email,
 			subject: 'Password Reset Request',
-			text: `You are receiving this email because you (or someone else) has requested a password reset. Please click on the following link to reset your password: ${resetUrl}`
+			text: `
+        <p>You are receiving this email because you (or someone else) has requested a password reset.</p>
+        <p>Please click on the button below to reset your password:</p>
+        <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007BFF; text-align: center; text-decoration: none; border-radius: 5px;">Reset Password</a>
+        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    `
 		});
 
 		await authTokenModel.create({
@@ -208,7 +221,7 @@ export const forgot_password = async (params: IParams) => {
 		return {
 			success: true,
 			message: 'Password reset email sent successfully',
-			data: null
+			data: resetToken
 		};
 	} catch (error) {
 		await cleanupTokensAfterFailedEmailMessage({ id: fetchUser._id as string });
@@ -216,11 +229,12 @@ export const forgot_password = async (params: IParams) => {
 	}
 };
 
-export const reset_password = async (params: IParams) => {
-	const { password } = params.data;
-	const { id } = params.user;
+export const reset_password = async (params: { data: { password: string; token: string } }) => {
+	const { password, token } = params.data;
 
-	const fetchUser = await User.findById(id);
+	const decoded = jwtUtils.verifyToken(token) as JwtPayload;
+
+	const fetchUser = await User.findById(decoded.id);
 
 	if (!fetchUser) {
 		throw new Error('UnAuthorized');
@@ -228,7 +242,7 @@ export const reset_password = async (params: IParams) => {
 
 	try {
 		const hashedPassword = await bcrypt.hash(password, 10);
-		await User.findByIdAndUpdate(id, { password: hashedPassword });
+		await User.findByIdAndUpdate(decoded.id, { password: hashedPassword });
 		return {
 			success: true,
 			message: 'Password reset successful',
@@ -236,5 +250,42 @@ export const reset_password = async (params: IParams) => {
 		};
 	} catch (error) {
 		throw new Error(`Error resetting password: ${error}`);
+	}
+};
+
+export const get_access_token = async (params: { data: IToken }) => {
+	try {
+		const token = params.data;
+
+		const checkExistingTokens = await tokenModel.findOne({ refreshToken: token.refreshToken });
+
+		if (!checkExistingTokens) {
+			throw new Error('Invalid refresh token');
+		}
+
+		const decoded = jwtUtils.verifyRefreshToken(token.refreshToken) as JwtPayload & { id: IUser['_id'] };
+		if (!decoded) {
+			throw new Error('Invalid refresh token');
+		}
+		const user = await User.findById(decoded.id);
+
+		const tokens = jwtUtils.generateTokens(user as IUser);
+		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000;
+
+		await tokenModel.findOneAndUpdate(
+			{ userId: user?._id },
+			{ refreshToken: tokens.refreshToken, expiresAt: new Date(Date.now() + refreshTokenExpiresIn) }
+		);
+
+		return {
+			success: true,
+			message: 'Access token refreshed successfully',
+			data: {
+				accessToken: tokens.accessToken,
+				refreshToken: tokens.refreshToken
+			}
+		};
+	} catch (error) {
+		throw new Error(`Error refreshing access token: ${error}`);
 	}
 };

@@ -1,0 +1,1187 @@
+{
+	"info": {
+		"_postman_id": "09971155-4bf5-4cfa-8281-265640ed7ff6",
+		"name": "bstRefer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23228058"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "registeration",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "verify_code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "authCode",
+									"value": "16239",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "66be6f792882b9552bca4e37",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "gospyjo@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "gospyjo@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refreshToken",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/forgot-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "fetch_user",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update_user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzgyMzk3NiwiZXhwIjoxNzIzOTEwMzc2fQ.AtgRBv9RVSsSqeLj13rYNzlaJogy1MzNcqn1m6rfD00",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change_email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzgyMzk3NiwiZXhwIjoxNzIzOTEwMzc2fQ.AtgRBv9RVSsSqeLj13rYNzlaJogy1MzNcqn1m6rfD00",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/update-email/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"update-email",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify_email",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/verify-email/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"verify-email",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change_password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzgyMzk3NiwiZXhwIjoxNzIzOTEwMzc2fQ.AtgRBv9RVSsSqeLj13rYNzlaJogy1MzNcqn1m6rfD00",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "123@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "confirmNewPassword",
+									"value": "123@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/change-password/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"change-password",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmZlNWFjZDQyZmZlOGFjNTJmZTc2NiIsImlhdCI6MTcyMzg1MjQ2MCwiZXhwIjoxNzIzOTM4ODYwfQ.xqnLRZby8ca3PXEUZitOkOAHLZDCsVtOokvBtJTX1No",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/delete-account/66bfe5acd42ffe8ac52fe766",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"delete-account",
+								"66bfe5acd42ffe8ac52fe766"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "referrals",
+			"item": [
+				{
+					"name": "add_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzkwNzc1OCwiZXhwIjoxNzIzOTk0MTU4fQ.hnjFjmLxpMpMUV1QIdShrnaK3sc9SwKFNkXvjlF_QJA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "{{$randomDepartment}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_referrals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzkwNzc1OCwiZXhwIjoxNzIzOTk0MTU4fQ.hnjFjmLxpMpMUV1QIdShrnaK3sc9SwKFNkXvjlF_QJA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/referral/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_single_referral",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzkwNzc1OCwiZXhwIjoxNzIzOTk0MTU4fQ.hnjFjmLxpMpMUV1QIdShrnaK3sc9SwKFNkXvjlF_QJA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral/66bf768610f9f4d3e123541c/66c0c1646f6f22afea7e0881",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral",
+								"66bf768610f9f4d3e123541c",
+								"66c0c1646f6f22afea7e0881"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_referral",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "students",
+			"item": [
+				{
+					"name": "add_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzkwNzc1OCwiZXhwIjoxNzIzOTk0MTU4fQ.hnjFjmLxpMpMUV1QIdShrnaK3sc9SwKFNkXvjlF_QJA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "{{$randomDepartment}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral/66bf768610f9f4d3e123541c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral",
+								"66bf768610f9f4d3e123541c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFkMDFmMGQ1YTkwZDlmM2ZlN2EzYyIsImlhdCI6MTcyMzk4OTA3NywiZXhwIjoxNzI0MDc1NDc3fQ.N5zla2LjsqxEmJES7jSF7xGDqZWPGNMFYqdKhOtsxeA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_single_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFkMDFmMGQ1YTkwZDlmM2ZlN2EzYyIsImlhdCI6MTcyMzk4OTA3NywiZXhwIjoxNzI0MDc1NDc3fQ.N5zla2LjsqxEmJES7jSF7xGDqZWPGNMFYqdKhOtsxeA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/student/66c202e4985a9a091648fc8d",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student",
+								"66c202e4985a9a091648fc8d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmY3Njg2MTBmOWY0ZDNlMTIzNTQxYyIsImlhdCI6MTcyMzkwNzc1OCwiZXhwIjoxNzIzOTk0MTU4fQ.hnjFjmLxpMpMUV1QIdShrnaK3sc9SwKFNkXvjlF_QJA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral/66bf768610f9f4d3e123541c/66c0c1646f6f22afea7e0881",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral",
+								"66bf768610f9f4d3e123541c",
+								"66c0c1646f6f22afea7e0881"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_student",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "wallets and withdrawals",
+					"item": [
+						{
+							"name": "fetch_wallets",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFkMDFmMGQ1YTkwZDlmM2ZlN2EzYyIsImlhdCI6MTcyNDA0MzA2MiwiZXhwIjoxNzI0MTI5NDYyfQ.IksI9vheofwR6rr1DjP2W0q5a9uUe19IFFFngSNheJ4",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/wallet",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"wallet"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fetch_single_wallet",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/wallet/66c2c8144b675704674ca39b",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"wallet",
+										"66c2c8144b675704674ca39b"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "approve_withdrawal",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "fetch_withdrawals",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "decline_withdrawal",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "get_users",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "suspend_user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/users/toggle-suspend/66bf768610f9f4d3e123541c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"toggle-suspend",
+										"66bf768610f9f4d3e123541c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_single_user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/users/66bf768610f9f4d3e123541c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"66bf768610f9f4d3e123541c"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "referrals",
+					"item": [
+						{
+							"name": "get_referrals",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get_single_referral",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/users/66bf768610f9f4d3e123541c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"66bf768610f9f4d3e123541c"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "login_admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_sub_admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"register"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sireli",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_admin_details",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update_admin_details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFjNDVmYzFjY2Y0ODJjYzYzMzBjYyIsImlhdCI6MTcyMzk3NjA1NCwiZXhwIjoxNzI0MDYyNDU0fQ.Soq-0X591kzBWIQgeTzLLf0zZbYQQV_s-2xdRh4zpgQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/update/66c1d01f0d5a90d9f3fe7a3c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"update",
+								"66c1d01f0d5a90d9f3fe7a3c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suspend_admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFjNDVmYzFjY2Y0ODJjYzYzMzBjYyIsImlhdCI6MTcyMzk3NjA1NCwiZXhwIjoxNzI0MDYyNDU0fQ.Soq-0X591kzBWIQgeTzLLf0zZbYQQV_s-2xdRh4zpgQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/auth/suspend/66c1d01f0d5a90d9f3fe7a3c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"suspend",
+								"66c1d01f0d5a90d9f3fe7a3c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1iIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzFkMDFmMGQ1YTkwZDlmM2ZlN2EzYyIsImlhdCI6MTcyMzk3ODIwOCwiZXhwIjoxNzI0MDY0NjA4fQ.lIb6taElTGSVgeFv9It3ZRdTV1Sm7smoqXT4OTnob0c",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/auth/delete/66c1d01f0d5a90d9f3fe7a3c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"delete",
+								"66c1d01f0d5a90d9f3fe7a3c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wallets and withdrawals",
+			"item": [
+				{
+					"name": "fetch_wallet",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "fetch_withdrawals",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "request_withdrawal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "amount",
+									"value": "500",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/withdrawal/request-withdrawal",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"withdrawal",
+								"request-withdrawal"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

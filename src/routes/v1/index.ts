@@ -2,7 +2,11 @@ import express from 'express';
 import authRoutes from './authRoutes';
 import userRoute from './userRoutes';
 import referralRoute from './referralRoutes';
-import adminRoute from './adminRoutes';
+import { adminReferralRoute, adminRoute, adminUserRoute, adminWalletRoute, adminWithdrawalRoute } from './adminRoutes';
+import path from 'path';
+import studentRoute from './stduentRoutes';
+import { walletRoute } from './walletRoutes';
+import { withdrawalRoute } from './withdrawalRoutes';
 
 const router = express.Router();
 
@@ -20,8 +24,36 @@ const defaultRoutes = [
 		route: referralRoute
 	},
 	{
+		path: '/wallet',
+		route: walletRoute
+	},
+	{
+		path: '/withdrawal',
+		route: withdrawalRoute
+	},
+	{
 		path: '/admin/auth',
 		route: adminRoute
+	},
+	{
+		path: '/admin/student',
+		route: studentRoute
+	},
+	{
+		path: '/admin/wallet',
+		route: adminWalletRoute
+	},
+	{
+		path: '/admin/withdrawal',
+		route: adminWithdrawalRoute
+	},
+	{
+		path: '/admin/users',
+		route: adminUserRoute
+	},
+	{
+		path: '/admin/referrals',
+		route: adminReferralRoute
 	}
 ];
 

@@ -1,0 +1,1502 @@
+{
+	"info": {
+		"_postman_id": "09971155-4bf5-4cfa-8281-265640ed7ff6",
+		"name": "bstRefer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23228058"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "registeration",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "verify_code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "authCode",
+									"value": "16239",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "66be6f792882b9552bca4e37",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "gospyjo@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "gospyjo@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refreshToken",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/forgot-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "fetch_user",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update_user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change_email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/update-email?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"update-email"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify_email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "authCode",
+									"value": "89065",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/verify-email?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"verify-email"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change_password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "123@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "confirmNewPassword",
+									"value": "123@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/change-password?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"change-password"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/delete-account?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"delete-account"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "referrals",
+			"item": [
+				{
+					"name": "add_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "{{$randomDepartment}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_referrals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/referral?userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_single_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/referral?userId&referralId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								},
+								{
+									"key": "referralId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/referral?userId&referralId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								},
+								{
+									"key": "referralId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_referral",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/referral?userId&referralId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"referral"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": null
+								},
+								{
+									"key": "referralId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "students",
+			"item": [
+				{
+					"name": "add_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "2-529-455-3729",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "{{$randomDepartment}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_single_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/student?studentId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumberExt}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/student?studentId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/student?studentId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"student"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "wallets and withdrawals",
+					"item": [
+						{
+							"name": "fetch_wallets",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/wallet",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"wallet"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fetch_single_wallet",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/wallet/?walletId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"wallet",
+										""
+									],
+									"query": [
+										{
+											"key": "walletId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "approve_withdrawal",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/withdrawal/approve-withdrawal?withdrawalId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"withdrawal",
+										"approve-withdrawal"
+									],
+									"query": [
+										{
+											"key": "withdrawalId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fetch_withdrawals",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "decline_withdrawal",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/withdrawal/approve-withdrawal?withdrawalId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"withdrawal",
+										"approve-withdrawal"
+									],
+									"query": [
+										{
+											"key": "withdrawalId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "get_users",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "suspend_user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/users/toggle-suspend?userId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"toggle-suspend"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_single_user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/users?userId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "referrals",
+					"item": [
+						{
+							"name": "get_referrals",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get_single_referral",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{bst_admin_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/referrlals/?referralId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"referrlals",
+										""
+									],
+									"query": [
+										{
+											"key": "referralId",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "login_admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sirelite11@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_sub_admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "12@Jkmdaj",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomStreetAddress}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"register"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sireli",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_admin_details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_admin_details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "{{$randomFullName}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/auth/update?adminId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"update"
+							],
+							"query": [
+								{
+									"key": "adminId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suspend_admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_main_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/auth/suspend/?adminId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"suspend",
+								""
+							],
+							"query": [
+								{
+									"key": "adminId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_main_admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/auth/delete/?adminId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"delete",
+								""
+							],
+							"query": [
+								{
+									"key": "adminId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wallets and withdrawals",
+			"item": [
+				{
+					"name": "fetch_wallet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/wallet",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch_withdrawals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/withdrawal",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"withdrawal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "request_withdrawal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bst_user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "amount",
+									"value": "500",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/withdrawal/request-withdrawal",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"withdrawal",
+								"request-withdrawal"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -11,7 +11,7 @@ export const handleRequest = (serviceFunction: (body: any) => Promise<any>) => {
 				admin: req.admin,
 				query: req.params
 			};
-			console.log(params.query);
+
 			const data = await serviceFunction(params);
 			res.status(200).json(data);
 		} catch (error: any) {

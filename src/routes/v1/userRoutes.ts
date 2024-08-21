@@ -6,9 +6,9 @@ import { emailVerificationSchema, forgotPasswordSchema, updatePasswordSchema } f
 
 const userRoute = express.Router();
 
-userRoute.get('/:userId', authMiddleware, fetchUser);
+userRoute.get('/', authMiddleware, fetchUser);
 userRoute.put('/:userId', authMiddleware, updateUser);
-userRoute.post('/update-email/:userId', validateRequest(forgotPasswordSchema), authMiddleware, changeUserEmail);
+userRoute.post('/update-email/:userId', authMiddleware, validateRequest(forgotPasswordSchema), changeUserEmail);
 userRoute.put('/verify-email/:userId', authMiddleware, validateRequest(emailVerificationSchema), verifyEmail);
 userRoute.put('/change-password/:userId', authMiddleware, validateRequest(updatePasswordSchema), changePassword);
 userRoute.delete('/delete-account/:userId', authMiddleware, deleteUser);

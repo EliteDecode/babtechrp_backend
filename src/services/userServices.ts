@@ -16,12 +16,9 @@ import { IToken } from '../interfaces/IToken';
 export const fetch_user_details = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
-		const fetchUser = await User.findById(id).select('-password');
 
-		if (id !== userId) {
-			throw new Error('You are not authorized to view this user');
-		}
+		const fetchUser = await User.findById(id).select('-password, -isEmailVerified, -updatedAt, -__v');
+
 		if (!fetchUser) {
 			throw new Error('User not found');
 		}
