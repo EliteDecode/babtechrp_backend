@@ -6,7 +6,8 @@
 	"scripts": {
 		"build": "tsc",
 		"test": "jest --config jest.config.ts --detectOpenHandles --coverage --maxWorkers=1",
-		"server": "nodemon"
+		"server": "nodemon",
+		"start": "node dist/server.js"
 	},
 	"author": "",
 	"license": "ISC",
