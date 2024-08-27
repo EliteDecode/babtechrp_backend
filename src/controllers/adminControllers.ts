@@ -5,7 +5,8 @@ import {
 	create_SubAdmin,
 	suspend_SubAdmin,
 	logout_admin,
-	fetch_admin_details
+	fetch_admin_details,
+	get_access_token
 } from '../services/adminServices';
 import { handleRequest } from '../helpers/handleRequest';
 import {
@@ -23,6 +24,7 @@ export const deleteSubAdmin = handleRequest(delete_sub_admin);
 export const suspendSubAdmin = handleRequest(suspend_SubAdmin);
 export const fetchAdmin = handleRequest(fetch_admin_details);
 export const logoutAdmin = handleRequest(logout_admin);
+export const requestAccessToken = handleRequest(get_access_token);
 
 //Admin Users
 export const fetchAllUsers = handleRequest(fetch_all_users);

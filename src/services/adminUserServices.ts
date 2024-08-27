@@ -5,10 +5,15 @@
 import Referrals from '../models/referralModel';
 import tokenModel from '../models/tokenModel';
 import User from '../models/userModel';
+import walletModel from '../models/walletModel';
 
 export const fetch_all_users = async () => {
 	try {
 		const users = await User.find().select('-password');
+
+		if (!users) {
+			throw new Error('No users found');
+		}
 		return {
 			success: true,
 			message: 'Users fetched successfully',
@@ -26,13 +31,17 @@ export const fetch_single_user = async (params: { query: { userId: string } }) =
 		if (!user) {
 			throw new Error('User not found');
 		}
-		const fetchReferals = await Referrals.find({ refferedBy: userId }).select('-password');
+
+		const fetchReferals = await Referrals.find({ referredBy: user?._id });
+		const fetchWallet = await walletModel.findOne({ userId: user?._id });
+
 		return {
 			success: true,
 			message: 'User fetched successfully',
 			data: {
 				user,
-				referrals: fetchReferals
+				referrals: fetchReferals,
+				wallet: fetchWallet
 			}
 		};
 	} catch (error: any) {
@@ -82,10 +91,12 @@ export const fetch_single_referral = async (params: { query: { referralId: strin
 		if (!referral) {
 			throw new Error('Referral not found');
 		}
+		const user = await User.findById(referral.referredBy).select('-password');
+
 		return {
 			success: true,
 			message: 'Referral fetched successfully',
-			data: referral
+			data: { referral, user }
 		};
 	} catch (error: any) {
 		throw new Error(` ${error.message}`);

@@ -12,12 +12,14 @@ import {
 	fetchSingleUser,
 	loginAdmin,
 	logoutAdmin,
+	requestAccessToken,
 	suspendSubAdmin,
 	toggleSuspendAccount,
 	updateSubAdmin
 } from '../../controllers/adminControllers';
 import { approveWithdrawal, declineWithdrawal, fetchAllUserWithdrawals, fetchUserSingleWithdrawal } from '../../controllers/withdrawalControllers';
 import { fetchAllUserWallet, fetchSingleUserWallet } from '../../controllers/walletControllers';
+import { requestAccessTokenSchema } from '../../validation/userValidation';
 
 export const adminRoute = express.Router();
 
@@ -26,8 +28,9 @@ adminRoute.post('/register', adminAuthMiddleware, validateRequest(registerValida
 adminRoute.put('/update/:adminId', subAdminAuthMiddleware, updateSubAdmin);
 adminRoute.delete('/delete/:adminId', adminAuthMiddleware, deleteSubAdmin);
 adminRoute.put('/suspend/:adminId', adminAuthMiddleware, suspendSubAdmin);
-adminRoute.delete('/logout', adminAuthMiddleware, logoutAdmin);
+adminRoute.post('/logout', adminAuthMiddleware, logoutAdmin);
 adminRoute.get('/', subAdminAuthMiddleware, fetchAdmin);
+adminRoute.post('/refresh-token', validateRequest(requestAccessTokenSchema), requestAccessToken);
 
 //users routes
 export const adminUserRoute = express.Router();

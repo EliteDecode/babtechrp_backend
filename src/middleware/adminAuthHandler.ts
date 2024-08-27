@@ -33,7 +33,7 @@ export const adminAuthMiddleware = async (req: AuthenticatedRequest, res: Respon
 			req.admin = verified as IAdmin;
 			next();
 		} catch (err) {
-			res.status(400).send(dataInvalid);
+			res.status(401).send(dataInvalid);
 		}
 	} else {
 		res.status(401).send(dataDenined);
@@ -51,7 +51,7 @@ export const subAdminAuthMiddleware = async (req: AuthenticatedRequest, res: Res
 			req.admin = verified as IAdmin;
 			next();
 		} catch (err) {
-			res.status(400).send('Invalid Token');
+			res.status(401).send('Invalid Token');
 		}
 	} else {
 		res.status(401).send('Access Denied');

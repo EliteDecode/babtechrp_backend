@@ -12,17 +12,13 @@ import Referral from '../models/referralModel';
 export const add_Referral = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
 
 		const ReferralData = params.data;
-
-		if (id !== userId) throw new Error('You are not authorized to perform this action');
-
 		const fetchUser = await User.findById(id).select('-password');
 		if (!fetchUser) throw new Error('User not found');
 
 		const checkIfReferralExists = await Referral.findOne({ referredBy: id, phone: ReferralData.phone });
-		if (checkIfReferralExists) throw new Error('Referral already exists');
+		if (checkIfReferralExists) throw new Error('Referral with this number already exists');
 
 		await Referral.create({
 			referredBy: id,
@@ -37,20 +33,16 @@ export const add_Referral = async (params: IParams) => {
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error('Error adding referral: ' + error.message);
+		throw new Error(error.message);
 	}
 };
 
 export const get_referrals = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
 
-		if (id !== userId) throw new Error('You are not authorized to perform this action');
-
-		const fetchUser = await User.findById(id);
-		if (!fetchUser) throw new Error('User not found');
 		const referrals = await Referral.find({ referredBy: id });
+		if (!referrals) throw new Error('No referrals found');
 
 		return {
 			success: true,
@@ -58,21 +50,17 @@ export const get_referrals = async (params: IParams) => {
 			data: referrals
 		};
 	} catch (error: any) {
-		throw new Error('Error fetching referrals: ' + error.message);
+		throw new Error(error.message);
 	}
 };
 
 export const get_single_referral = async (params: IParams) => {
 	try {
-		const { id } = params.user;
-		const { userId, referralId } = params.query;
-
-		if (id !== userId) throw new Error('You are not authorized to perform this action');
-
-		const fetchUser = await User.findById(id);
-		if (!fetchUser) throw new Error('User not found');
+		const { referralId } = params.query;
 
 		const referral = await Referral.findById(referralId);
+
+		if (!referral) throw new Error('Referral not found');
 
 		return {
 			success: true,
@@ -80,46 +68,46 @@ export const get_single_referral = async (params: IParams) => {
 			data: referral
 		};
 	} catch (error: any) {
-		throw new Error('Error fetching referral: ' + error.message);
+		throw new Error(error.message);
 	}
 };
 
 export const update_single_referral = async (params: IParams) => {
 	try {
-		const { id } = params.user;
-		const { userId, referralId } = params.query;
+		const { referralId } = params.query;
 		const referralData = params.data;
 
-		if (id !== userId) throw new Error('You are not authorized to perform this action');
-
-		const fetchUser = await User.findById(id);
-		if (!fetchUser) throw new Error('User not found');
-
+		const fetchReferral = await Referral.findById(referralId);
+		if (!fetchReferral) throw new Error('Referral not found');
+		if (fetchReferral?.isMatched === true && fetchReferral?.phone !== referralData?.phone) {
+			throw new Error('Referral has already been matched, you cannot update the phone number');
+		}
 		const referral = await Referral.findByIdAndUpdate(referralId, referralData, { new: true });
 
-		return {
-			success: true,
-			message: 'Referral updated successfully',
-			data: referral
-		};
+		if (referral) {
+			return {
+				success: true,
+				message: 'Referral updated successfully',
+				data: referral
+			};
+		}
 	} catch (error: any) {
-		throw new Error('Error updating referral: ' + error.message);
+		throw new Error(error.message);
 	}
 };
 
 export const delete_single_referral = async (params: IParams) => {
 	try {
-		const { id } = params.user;
-		const { userId, referralId } = params.query;
+		const { referralId } = params.query;
 
-		if (id !== userId) {
-			throw new Error('You are not authorized to perform this action');
+		const fetchReferral = await Referral.findById(referralId);
+		if (!fetchReferral) throw new Error('Referral not found');
+		if (fetchReferral?.isMatched === true) {
+			throw new Error('Referral has already been matched, you cannot delete this referral');
 		}
+		if (!fetchReferral) throw new Error('Referral not found');
 
-		const fetchUser = await User.findById(id);
-		if (!fetchUser) throw new Error('User not found');
-
-		await Referral.findOneAndDelete(referralId);
+		await Referral.findByIdAndDelete(referralId);
 
 		return {
 			success: true,

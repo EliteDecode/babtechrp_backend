@@ -32,7 +32,7 @@ const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: Ne
 				data: null
 			};
 
-			res.status(400).send(data);
+			res.status(401).send(data);
 		}
 	} else {
 		const data = {

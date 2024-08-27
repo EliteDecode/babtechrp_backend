@@ -17,6 +17,7 @@ import { generateReferralNumber } from '../helpers/generateReferralCode';
 import { IParams } from '../interfaces/IParams';
 import { JwtPayload } from 'jsonwebtoken';
 import { IUser } from '../interfaces/IUser';
+import walletModel from '../models/walletModel';
 
 export const register_user = async (params: IParams) => {
 	try {
@@ -68,7 +69,16 @@ export const register_user = async (params: IParams) => {
 			await sendMail({
 				email: newUser.email,
 				subject: 'Verify Your Email',
-				text: `Your verification code is: ${verificationCode}`
+				text: `
+        <div style="font-family: Arial, sans-serif; color: #333; text-align: center;">
+            <h2 style="color: #007BFF;">Email Verification</h2>
+            <p>Your verification code is:</p>
+            <p style="font-size: 24px; font-weight: bold; color: #000;">${verificationCode}</p>
+            <p>Please enter this code to verify your email address.</p>
+            <br/>
+            <p>Thank you!</p>
+        </div>
+    `
 			});
 		} catch (emailError: any) {
 			// Cleanup tokens if email sending fails
@@ -106,6 +116,14 @@ export const verify_user_token = async (params: { data: IToken; query: { userId:
 		}
 
 		const updateUser = await User.findByIdAndUpdate(fetchUserToken.userId, { isEmailVerified: true }, { new: true });
+		const newWallet = new walletModel({
+			userId: userId,
+			total: 0,
+			withdrawn: 0,
+			balance: 0,
+			transactions: []
+		});
+		await newWallet.save();
 
 		await authTokenModel.findByIdAndDelete(fetchUserToken._id);
 

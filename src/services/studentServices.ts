@@ -10,6 +10,7 @@ import Referral from '../models/referralModel';
 import Student from '../models/studentModel';
 import User from '../models/userModel';
 import Wallet from '../models/walletModel';
+import sendMail from '../utils/emailUtils';
 
 export const add_Student = async (params: { data: IStudent; admin: { id: string }; query: any }) => {
 	try {
@@ -28,23 +29,43 @@ export const add_Student = async (params: { data: IStudent; admin: { id: string 
 				await referral.save();
 
 				const fetchReferredByWallet = await Wallet.findOne({ userId: referral.referredBy });
-				if (fetchReferredByWallet) {
+				const fetchreferredBy = await User.findById(referral.referredBy);
+
+				if (fetchReferredByWallet && fetchreferredBy) {
 					fetchReferredByWallet.total += 10000;
+					fetchReferredByWallet.balance += 10000;
 					fetchReferredByWallet.transactions.push({
-						referral: referral._id as string,
+						referralName: referral.fullname,
+						referralPhone: referral.phone,
 						amount: 10000,
 						date: new Date(),
 						type: 'credit'
 					});
 					await fetchReferredByWallet.save();
+					await sendMail({
+						email: fetchreferredBy?.email,
+						subject: 'Referral Bonus',
+						text: `
+					<div style="font-family: Arial, sans-serif; color: #333;">
+						<p>Dear ${fetchreferredBy?.fullname},</p>
+						<p>You have been credited with <strong>10,000 Naira</strong> as a referral bonus. Thank you for your referral.</p>
+						<p>Please log in to your account to view your wallet balance.</p>
+						<br/>
+						<p>Best regards,</p>
+						<p><strong>BST</strong></p>
+					</div>
+				`
+					});
 				} else {
 					const newWallet = new Wallet({
 						userId: referral.referredBy,
 						total: 10000,
 						withdrawn: 0,
+						balance: 10000,
 						transactions: [
 							{
-								referral: referral._id,
+								referralName: referral.fullname,
+								referralPhone: referral.phone,
 								amount: 10000,
 								date: new Date(),
 								type: 'credit'
@@ -93,6 +114,8 @@ export const get_single_student = async (params: IParams) => {
 		const { studentId } = params.query;
 		const student = await Student.findById(studentId);
 
+		if (!student) throw new Error('Student not found');
+
 		return {
 			success: true,
 			message: 'Student fetched successfully',
@@ -110,6 +133,8 @@ export const update_single_student = async (params: IParams) => {
 
 		const student = await Student.findByIdAndUpdate(studentId, studentData, { new: true });
 
+		if (!student) throw new Error('Student not found');
+
 		return {
 			success: true,
 			message: 'Student updated successfully',
@@ -124,6 +149,8 @@ export const delete_single_student = async (params: IParams) => {
 	try {
 		const { studentId } = params.query;
 
+		const fetchStudent = await Student.findById(studentId);
+		if (!fetchStudent) throw new Error('Student not found');
 		await Student.findOneAndDelete(studentId);
 
 		return {

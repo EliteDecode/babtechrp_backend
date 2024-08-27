@@ -10,16 +10,12 @@ export const fetch_user_wallet = async (params: IParams) => {
 		const { id } = params.user;
 
 		const wallet = await Wallet.findOne({ userId: id });
-		const fetchUser = await User.findById(id);
 		if (!wallet) throw new Error('Wallet not found');
 
 		return {
 			success: true,
 			message: 'Wallet fetched successfully',
-			data: {
-				wallet,
-				user: fetchUser
-			}
+			data: wallet
 		};
 	} catch (error: any) {
 		throw new Error(error.message);

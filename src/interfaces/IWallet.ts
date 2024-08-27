@@ -4,9 +4,11 @@ export interface IWallet extends Document {
 	userId: Types.ObjectId;
 	total: number;
 	withdrawn: number;
+	balance: number;
 	transactions: [
 		{
-			referral?: string;
+			referralName?: string;
+			referralPhone?: string;
 			amount: number;
 			date: Date;
 			type: string;

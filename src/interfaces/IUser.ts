@@ -8,6 +8,7 @@ export interface IUser extends Document {
 	phone?: string;
 	address?: string;
 	isEmailVerified?: boolean;
+	isProfileUpdated?: boolean;
 	isSuspended?: boolean;
 	referralCode?: string;
 }

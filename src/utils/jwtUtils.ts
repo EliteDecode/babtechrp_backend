@@ -34,4 +34,17 @@ const verifyAdminToken = (token: string) => {
 	return jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET!);
 };
 
-export default { generateTokens, verifyToken, refreshTokens, generateResetToken, generateAdminTokens, verifyAdminToken, verifyRefreshToken };
+const verifyAdminRefreshToken = (token: string) => {
+	return jwt.verify(token, process.env.ADMIN_REFRESH_TOKEN_SECRET!);
+};
+
+export default {
+	generateTokens,
+	verifyToken,
+	refreshTokens,
+	generateResetToken,
+	generateAdminTokens,
+	verifyAdminToken,
+	verifyRefreshToken,
+	verifyAdminRefreshToken
+};

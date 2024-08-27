@@ -7,9 +7,11 @@
 import bcrypt from 'bcrypt';
 import jwtUtils from '../utils/jwtUtils';
 import Admin from '../models/adminModel';
-import { IAdminLogin } from '../interfaces/IAdmin';
+import { IAdmin, IAdminLogin } from '../interfaces/IAdmin';
 import { IParams } from '../interfaces/IParams';
 import tokenModel from '../models/tokenModel';
+import { IToken } from '../interfaces/IToken';
+import { JwtPayload } from 'jsonwebtoken';
 
 export const login_Admin = async (params: { data: IAdminLogin }) => {
 	try {
@@ -17,6 +19,9 @@ export const login_Admin = async (params: { data: IAdminLogin }) => {
 		const admin = await Admin.findOne({ email });
 		if (!admin) {
 			throw new Error('Admin not found');
+		}
+		if (admin.isSuspended) {
+			throw new Error('Account is suspended');
 		}
 
 		const isMatch = await bcrypt.compare(password, admin.password);
@@ -42,7 +47,7 @@ export const login_Admin = async (params: { data: IAdminLogin }) => {
 			}
 		};
 	} catch (error: any) {
-		throw new Error('Error logging in admin' + error.message);
+		throw new Error(error.message);
 	}
 };
 
@@ -73,7 +78,7 @@ export const create_SubAdmin = async (params: IParams) => {
 			data: newAdmin
 		};
 	} catch (error: any) {
-		throw new Error('Error creating admin' + error.message);
+		throw new Error(error.message);
 	}
 };
 
@@ -149,7 +154,7 @@ export const logout_admin = async (params: { data: { refreshToken: string } }) =
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error(`Error logging out user: ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };
 
@@ -169,6 +174,43 @@ export const fetch_admin_details = async (params: IParams) => {
 			data: fetchAdmin
 		};
 	} catch (error: any) {
-		throw new Error(`Error fetching admin details: ${error.message}`);
+		throw new Error(`${error.message}`);
+	}
+};
+
+export const get_access_token = async (params: { data: IToken }) => {
+	try {
+		const token = params.data;
+
+		const checkExistingTokens = await tokenModel.findOne({ refreshToken: token.refreshToken });
+
+		if (!checkExistingTokens) {
+			throw new Error('Invalid refresh token');
+		}
+
+		const decoded = jwtUtils.verifyAdminRefreshToken(token.refreshToken) as JwtPayload & { id: IAdmin['_id'] };
+		if (!decoded) {
+			throw new Error('Invalid refresh token');
+		}
+		const admin = await Admin.findById(decoded.id);
+
+		const tokens = jwtUtils.generateAdminTokens(admin as IAdmin);
+		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000;
+
+		await tokenModel.findOneAndUpdate(
+			{ userId: admin?._id },
+			{ refreshToken: tokens.refreshToken, expiresAt: new Date(Date.now() + refreshTokenExpiresIn) }
+		);
+
+		return {
+			success: true,
+			message: 'Access token refreshed successfully',
+			data: {
+				accessToken: tokens.accessToken,
+				refreshToken: tokens.refreshToken
+			}
+		};
+	} catch (error) {
+		throw new Error(` ${error}`);
 	}
 };

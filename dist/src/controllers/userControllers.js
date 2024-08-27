@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteUser = exports.changePassword = exports.verifyEmail = exports.changeUserEmail = exports.updateUser = exports.fetchUser = void 0;
+const handleRequest_1 = require("../helpers/handleRequest");
+const userServices_1 = require("../services/userServices");
+exports.fetchUser = (0, handleRequest_1.handleRequest)(userServices_1.fetch_user_details);
+exports.updateUser = (0, handleRequest_1.handleRequest)(userServices_1.update_user_details);
+exports.changeUserEmail = (0, handleRequest_1.handleRequest)(userServices_1.change_user_email);
+exports.verifyEmail = (0, handleRequest_1.handleRequest)(userServices_1.verify_user_email);
+exports.changePassword = (0, handleRequest_1.handleRequest)(userServices_1.change_user_password);
+exports.deleteUser = (0, handleRequest_1.handleRequest)(userServices_1.delete_user_account);

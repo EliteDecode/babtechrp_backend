@@ -7,10 +7,10 @@ import { ref } from 'joi';
 
 const referralRoute = express.Router();
 
-referralRoute.post('/:userId', authMiddleware, validateRequest(addReferralSchema), addReferral);
-referralRoute.get('/:userId', authMiddleware, getReferral);
-referralRoute.get('/:userId/:referralId', authMiddleware, geSingleReferral);
-referralRoute.put('/:userId/:referralId', authMiddleware, updateReferral);
-referralRoute.delete('/:userId/:referralId', authMiddleware, deleteReferral);
+referralRoute.post('/', authMiddleware, validateRequest(addReferralSchema), addReferral);
+referralRoute.get('/', authMiddleware, getReferral);
+referralRoute.get('/:referralId', authMiddleware, geSingleReferral);
+referralRoute.put('/:referralId', authMiddleware, updateReferral);
+referralRoute.delete('/:referralId', authMiddleware, deleteReferral);
 
 export default referralRoute;

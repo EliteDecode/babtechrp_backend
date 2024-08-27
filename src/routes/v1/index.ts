@@ -7,6 +7,7 @@ import path from 'path';
 import studentRoute from './stduentRoutes';
 import { walletRoute } from './walletRoutes';
 import { withdrawalRoute } from './withdrawalRoutes';
+import { supportRoute } from './supportRoutes';
 
 const router = express.Router();
 
@@ -30,6 +31,10 @@ const defaultRoutes = [
 	{
 		path: '/withdrawal',
 		route: withdrawalRoute
+	},
+	{
+		path: '/support',
+		route: supportRoute
 	},
 	{
 		path: '/admin/auth',

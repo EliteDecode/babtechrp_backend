@@ -12,12 +12,13 @@ import User from '../models/userModel';
 import sendMail from '../utils/emailUtils';
 import authTokenModel from '../models/authTokenModel';
 import { IToken } from '../interfaces/IToken';
+import tokenModel from '../models/tokenModel';
 
 export const fetch_user_details = async (params: IParams) => {
 	try {
 		const { id } = params.user;
 
-		const fetchUser = await User.findById(id).select('-password, -isEmailVerified, -updatedAt, -__v');
+		const fetchUser = await User.findById(id).select('-password');
 
 		if (!fetchUser) {
 			throw new Error('User not found');
@@ -29,7 +30,7 @@ export const fetch_user_details = async (params: IParams) => {
 			data: fetchUser
 		};
 	} catch (error: any) {
-		throw new Error(`Error fetching user details: ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };
 
@@ -50,7 +51,7 @@ export const update_user_details = async (params: IParams) => {
 		if (userData.email) {
 			throw new Error('Email cannot be updated');
 		}
-		const updateUser = await User.findByIdAndUpdate(id, userData, { new: true }).select('-password');
+		const updateUser = await User.findByIdAndUpdate(id, { ...userData, isProfileUpdated: true }, { new: true }).select('-password');
 		if (!updateUser) {
 			throw new Error('User not found');
 		}
@@ -60,7 +61,7 @@ export const update_user_details = async (params: IParams) => {
 			data: updateUser
 		};
 	} catch (error: any) {
-		throw new Error(`Error updating user details: ${error.message}`);
+		throw new Error(` ${error.message}`);
 	}
 };
 
@@ -107,7 +108,7 @@ export const change_user_email = async (params: IParams) => {
 			data: null
 		};
 	} catch (error) {
-		throw new Error(`Error sending verification code: ${error}`);
+		throw new Error(` ${error}`);
 	}
 };
 
@@ -127,12 +128,11 @@ export const verify_user_email = async (params: { data: IToken; user: { id: stri
 			expiresAt: { $gt: new Date() }
 		});
 
-		console.log(fetchUserToken);
 		if (!fetchUserToken || !fetchUserToken.authCode) {
-			throw new Error('Verification code is incorrect');
+			throw new Error('The verification code you entered is incorrect or has expired. Please try again');
 		}
 
-		const isMatch = userAuthInfo.authCode && (await bcrypt.compare(userAuthInfo.authCode, fetchUserToken.authCode));
+		const isMatch = userAuthInfo.authCode && (await bcrypt.compare(userAuthInfo.authCode.toString(), fetchUserToken.authCode));
 		if (!isMatch) {
 			throw new Error('Invalid or expired verification code');
 		}
@@ -147,7 +147,7 @@ export const verify_user_email = async (params: { data: IToken; user: { id: stri
 			data: updateUser
 		};
 	} catch (error: any) {
-		throw new Error(`Error verifying user token: ${error.message}`);
+		throw new Error(` ${error.message}`);
 	}
 };
 
@@ -178,7 +178,7 @@ export const change_user_password = async (params: { data: IChangePassword; user
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error(`Error changing password: ${error.message}`);
+		throw new Error(` ${error.message}`);
 	}
 };
 
@@ -197,7 +197,7 @@ export const delete_user_account = async (params: IParams) => {
 		}
 
 		await User.findByIdAndDelete(id);
-		await authTokenModel.findOneAndDelete({ userId: userId });
+		await tokenModel.findOneAndDelete({ userId: userId });
 
 		return {
 			success: true,
@@ -205,6 +205,6 @@ export const delete_user_account = async (params: IParams) => {
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error(`Error deleting user: ${error.message}`);
+		throw new Error(` ${error.message}`);
 	}
 };

@@ -6,9 +6,11 @@ const walletSchema = new mongoose.Schema<IWallet>(
 		userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 		total: { type: Number, default: 0 },
 		withdrawn: { type: Number, default: 0 },
+		balance: { type: Number, default: 0 },
 		transactions: [
 			{
-				referral: { type: mongoose.Schema.Types.ObjectId, ref: 'Referral' },
+				referralName: { type: String },
+				referralPhone: { type: String },
 				amount: { type: Number },
 				type: {
 					type: String,
