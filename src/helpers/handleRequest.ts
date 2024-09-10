@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RequestCustom } from '../types/express';
 
 // Higher-order function to handle try/catch logic

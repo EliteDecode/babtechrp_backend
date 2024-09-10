@@ -16,7 +16,7 @@ import { IToken } from '../interfaces/IToken';
 import { generateReferralNumber } from '../helpers/generateReferralCode';
 import { IParams } from '../interfaces/IParams';
 import { JwtPayload } from 'jsonwebtoken';
-import { IUser } from '../interfaces/IUser';
+import { IUser, IUserLogin } from '../interfaces/IUser';
 import walletModel from '../models/walletModel';
 
 export const register_user = async (params: IParams) => {
@@ -70,15 +70,15 @@ export const register_user = async (params: IParams) => {
 				email: newUser.email,
 				subject: 'Verify Your Email',
 				text: `
-        <div style="font-family: Arial, sans-serif; color: #333; text-align: center;">
-            <h2 style="color: #007BFF;">Email Verification</h2>
-            <p>Your verification code is:</p>
-            <p style="font-size: 24px; font-weight: bold; color: #000;">${verificationCode}</p>
-            <p>Please enter this code to verify your email address.</p>
-            <br/>
-            <p>Thank you!</p>
-        </div>
-    `
+			    <div style="font-family: Arial, sans-serif; color: #333; text-align: center;">
+			        <h2 style="color: #007BFF;">Email Verification</h2>
+			        <p>Your verification code is:</p>
+			        <p style="font-size: 24px; font-weight: bold; color: #000;">${verificationCode}</p>
+			        <p>Please enter this code to verify your email address.</p>
+			        <br/>
+			        <p>Thank you!</p>
+			    </div>
+			`
 			});
 		} catch (emailError: any) {
 			// Cleanup tokens if email sending fails
@@ -117,7 +117,7 @@ export const verify_user_token = async (params: { data: IToken; query: { userId:
 
 		const updateUser = await User.findByIdAndUpdate(fetchUserToken.userId, { isEmailVerified: true }, { new: true });
 		const newWallet = new walletModel({
-			userId: userId,
+			userId: fetchUserToken.userId,
 			total: 0,
 			withdrawn: 0,
 			balance: 0,
@@ -137,26 +137,20 @@ export const verify_user_token = async (params: { data: IToken; query: { userId:
 	}
 };
 
-export const login_user = async (params: IParams) => {
+export const login_user = async (params: { data: IUserLogin }) => {
 	const { email, password } = params.data;
-
 	const user = await User.findOne({ email: email.toLowerCase() });
-
 	if (!user) {
 		throw new Error('User not found');
 	}
-
 	if (user.isSuspended) {
 		throw new Error('Your account has been suspended');
 	}
-
 	const isPasswordValid = await bcrypt.compare(password, user.password);
 	if (!isPasswordValid) {
 		throw new Error('Invalid password');
 	}
-
 	const tokens = jwtUtils.generateTokens(user);
-
 	try {
 		const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000;
 		const expiresAt = new Date(Date.now() + refreshTokenExpiresIn);
@@ -209,7 +203,7 @@ export const forgot_password = async (params: IParams) => {
 	const checkUserWithToken = await authTokenModel.findOne({ userId: fetchUser?._id });
 
 	if (!fetchUser) {
-		throw new Error('User not found');
+		throw new Error('User with this email does not exist');
 	}
 
 	if (checkUserWithToken) {
@@ -255,7 +249,7 @@ export const reset_password = async (params: { data: { password: string; token: 
 	const fetchUser = await User.findById(decoded.id);
 
 	if (!fetchUser) {
-		throw new Error('UnAuthorized');
+		throw new Error('Invalid or expired reset token');
 	}
 
 	try {
@@ -297,13 +291,13 @@ export const get_access_token = async (params: { data: IToken }) => {
 
 		return {
 			success: true,
-			message: 'Access token refreshed successfully',
+			message: 'Access token generated successfully',
 			data: {
 				accessToken: tokens.accessToken,
 				refreshToken: tokens.refreshToken
 			}
 		};
 	} catch (error) {
-		throw new Error(`Error refreshing access token: ${error}`);
+		throw new Error(`Error generating access token: ${error}`);
 	}
 };

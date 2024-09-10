@@ -1,6 +1,5 @@
-import { IUser } from './IUser';
 import { IAdmin } from './IAdmin';
-import { IStudent } from './IStudent';
+import { IUser } from './IUser';
 
 export interface IParams {
 	data: IUser | IAdmin;

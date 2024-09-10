@@ -3,6 +3,7 @@ import { loggingHandler } from './middleware/loggingHandler';
 import { corsHandler } from './middleware/corsHandler';
 import { errorHandler } from './middleware/errorHandler';
 import routes from './routes/v1';
+import './config/logging';
 import cron from 'node-cron';
 import { cleanupExpiredTokens } from './helpers/cleanUpExpiredUser';
 

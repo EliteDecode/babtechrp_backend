@@ -37,11 +37,10 @@ export const fetch_user_details = async (params: IParams) => {
 export const update_user_details = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
+		// const { userId } = params.query;
 		const userData = params.data;
-		if (userId !== id) {
-			throw new Error('You are not authorized to update this user');
-		}
+
+		// First, check if the user exists
 		const checkUser = await User.findById(id);
 
 		if (!checkUser) {
@@ -51,17 +50,21 @@ export const update_user_details = async (params: IParams) => {
 		if (userData.email) {
 			throw new Error('Email cannot be updated');
 		}
+
+		// // Then check for authorization
+		// if (userId !== id) {
+		// 	throw new Error('You are not authorized to update this user');
+		// }
+
 		const updateUser = await User.findByIdAndUpdate(id, { ...userData, isProfileUpdated: true }, { new: true }).select('-password');
-		if (!updateUser) {
-			throw new Error('User not found');
-		}
+
 		return {
 			success: true,
 			message: 'User details updated successfully',
-			data: updateUser
+			data: updateUser && updateUser
 		};
 	} catch (error: any) {
-		throw new Error(` ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };
 
@@ -69,18 +72,14 @@ export const change_user_email = async (params: IParams) => {
 	try {
 		const { id } = params.user;
 		const { email } = params.data;
-		const { userId } = params.query;
 
 		const checkUser = await User.findOne({ email });
-		const checkExistingToken = await authTokenModel.findOne({ userId: userId });
-
-		if (userId !== id) {
-			throw new Error('You are not authorized to update this user');
-		}
 
 		if (checkUser) {
 			throw new Error('Email already exists');
 		}
+
+		const checkExistingToken = await authTokenModel.findOne({ userId: id });
 
 		if (checkExistingToken) {
 			throw new Error('Verification code already sent to your email');
@@ -90,7 +89,7 @@ export const change_user_email = async (params: IParams) => {
 		const hashedVerificationCode = await bcrypt.hash(verificationCode, 10);
 
 		await authTokenModel.create({
-			userId: userId,
+			userId: id,
 			newEmail: email,
 			authCode: hashedVerificationCode,
 			expiresAt: new Date(Date.now() + 5 * 60 * 1000) // Expires in 5 minutes
@@ -107,25 +106,18 @@ export const change_user_email = async (params: IParams) => {
 			message: 'Verification code sent to your email',
 			data: null
 		};
-	} catch (error) {
-		throw new Error(` ${error}`);
+	} catch (error: any) {
+		throw new Error(`${error.message}`);
 	}
 };
 
 export const verify_user_email = async (params: { data: IToken; user: { id: string }; query: { userId: string } }) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
-
 		const userAuthInfo = params.data;
-
-		if (id !== userId) {
-			throw new Error('You are not authorized to verify this user');
-		}
-
 		const fetchUserToken = await authTokenModel.findOne({
-			userId: userId,
-			expiresAt: { $gt: new Date() }
+			userId: id
+			// expiresAt: { $gt: new Date() }
 		});
 
 		if (!fetchUserToken || !fetchUserToken.authCode) {
@@ -147,24 +139,20 @@ export const verify_user_email = async (params: { data: IToken; user: { id: stri
 			data: updateUser
 		};
 	} catch (error: any) {
-		throw new Error(` ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };
 
 export const change_user_password = async (params: { data: IChangePassword; user: { id: string }; query: { userId: string } }) => {
 	try {
-		const { userId } = params.query;
 		const { id } = params.user;
 		const { oldPassword, newPassword } = params.data;
 
-		if (userId !== id) {
-			throw new Error('You are not authorized to change this password');
-		}
-
-		const user = await User.findById(userId);
+		const user = await User.findById(id);
 		if (!user) {
 			throw new Error('User not found');
 		}
+
 		const isMatch = await bcrypt.compare(oldPassword, user.password);
 		if (!isMatch) {
 			throw new Error('Invalid old password');
@@ -178,18 +166,13 @@ export const change_user_password = async (params: { data: IChangePassword; user
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error(` ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };
 
 export const delete_user_account = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-		const { userId } = params.query;
-
-		if (userId !== id) {
-			throw new Error('You are not authorized to delete this user');
-		}
 		const checkUser = await User.findById(id);
 
 		if (!checkUser) {
@@ -197,7 +180,7 @@ export const delete_user_account = async (params: IParams) => {
 		}
 
 		await User.findByIdAndDelete(id);
-		await tokenModel.findOneAndDelete({ userId: userId });
+		await tokenModel.findOneAndDelete({ userId: id });
 
 		return {
 			success: true,
@@ -205,6 +188,6 @@ export const delete_user_account = async (params: IParams) => {
 			data: null
 		};
 	} catch (error: any) {
-		throw new Error(` ${error.message}`);
+		throw new Error(`${error.message}`);
 	}
 };

@@ -7,7 +7,8 @@
 		"build": "tsc",
 		"test": "jest --config jest.config.ts --detectOpenHandles --coverage --maxWorkers=1",
 		"server": "nodemon",
-		"start": "node ./dist/src/server.js"
+		"start": "node ./dist/src/server.js",
+		"test-dir": "jest ./test/unit/authSupertest.test.ts"
 	},
 	"author": "",
 	"license": "ISC",
