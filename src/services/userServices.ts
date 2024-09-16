@@ -5,25 +5,23 @@
 //5. chnage password
 //6. delete Account
 
-import { IParams } from '../interfaces/IParams';
-import { IChangePassword, IUpdateUser, IUser } from '../interfaces/IUser';
 import bcrypt from 'bcrypt';
+import { IParams } from '../interfaces/IParams';
+import { IToken } from '../interfaces/IToken';
+import { IChangePassword, IUpdateUser } from '../interfaces/IUser';
+import authTokenModel from '../models/authTokenModel';
+import tokenModel from '../models/tokenModel';
 import User from '../models/userModel';
 import sendMail from '../utils/emailUtils';
-import authTokenModel from '../models/authTokenModel';
-import { IToken } from '../interfaces/IToken';
-import tokenModel from '../models/tokenModel';
+import bstUserIds from '../models/bstUserIdsModel';
 
 export const fetch_user_details = async (params: IParams) => {
 	try {
 		const { id } = params.user;
-
 		const fetchUser = await User.findById(id).select('-password');
-
 		if (!fetchUser) {
 			throw new Error('User not found');
 		}
-
 		return {
 			success: true,
 			message: 'User details fetched successfully',
@@ -34,12 +32,11 @@ export const fetch_user_details = async (params: IParams) => {
 	}
 };
 
-export const update_user_details = async (params: IParams) => {
+export const update_user_details = async (params: { data: IUpdateUser; user: { id: string } }) => {
 	try {
 		const { id } = params.user;
 		// const { userId } = params.query;
 		const userData = params.data;
-
 		// First, check if the user exists
 		const checkUser = await User.findById(id);
 
@@ -50,13 +47,17 @@ export const update_user_details = async (params: IParams) => {
 		if (userData.email) {
 			throw new Error('Email cannot be updated');
 		}
+		const bstUserId = await bstUserIds.findOne({ bstId: userData.bstId });
+		if (!bstUserId) throw new Error('User ID not found');
 
-		// // Then check for authorization
-		// if (userId !== id) {
-		// 	throw new Error('You are not authorized to update this user');
-		// }
+		const checkIfUserIdIsCorrect = await bstUserIds.findOne({ $or: [{ phone: userData.phone }, { email: userData.email }] });
+
+		if (!checkIfUserIdIsCorrect) throw new Error('Invalid User ID Entered');
 
 		const updateUser = await User.findByIdAndUpdate(id, { ...userData, isProfileUpdated: true }, { new: true }).select('-password');
+
+		bstUserId.isIdUsed = true;
+		await bstUserId.save();
 
 		return {
 			success: true,

@@ -5,7 +5,9 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	confirmPassword: string;
+	bstId?: string;
 	phone?: string;
+	username?: string;
 	address?: string;
 	isEmailVerified?: boolean;
 	isProfileUpdated?: boolean;
@@ -17,6 +19,9 @@ export interface IUpdateUser extends Document {
 	fullname?: string;
 	phone?: string;
 	address?: string;
+	bstId?: string;
+	email?: string;
+	username?: string;
 }
 
 export interface IChangePassword {

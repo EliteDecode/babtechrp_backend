@@ -16,6 +16,7 @@ export const add_Referral = async (params: IParams) => {
 		const ReferralData = params.data;
 		const fetchUser = await User.findById(id).select('-password');
 		if (!fetchUser) throw new Error('User not found');
+		if (!fetchUser?.isProfileUpdated) throw new Error('Please update your profile before adding a referral');
 
 		const checkIfReferralExists = await Referral.findOne({ referredBy: id, phone: ReferralData.phone });
 		if (checkIfReferralExists) throw new Error('Referral with this number already exists');

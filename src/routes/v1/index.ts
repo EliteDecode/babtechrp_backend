@@ -8,6 +8,7 @@ import studentRoute from './stduentRoutes';
 import { walletRoute } from './walletRoutes';
 import { withdrawalRoute } from './withdrawalRoutes';
 import { supportRoute } from './supportRoutes';
+import bstUserIdsRoutes from './bstUserIdsRoutes';
 
 const router = express.Router();
 
@@ -59,6 +60,10 @@ const defaultRoutes = [
 	{
 		path: '/admin/referrals',
 		route: adminReferralRoute
+	},
+	{
+		path: '/admin/bstUserIds',
+		route: bstUserIdsRoutes
 	}
 ];
 

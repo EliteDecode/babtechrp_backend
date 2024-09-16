@@ -131,9 +131,22 @@ export const update_single_student = async (params: IParams) => {
 		const { studentId } = params.query;
 		const studentData = params.data;
 
+		const fetchStudent = await Student.findById(studentId);
+
+		if (!fetchStudent) throw new Error('Student not found');
+
+		const checkStudentPhone = await Student.findOne({
+			phone: studentData.phone,
+			_id: { $ne: studentId } // Exclude the current student by ID
+		});
+
+		if (checkStudentPhone) {
+			throw new Error('Phone number already in use by another student');
+		}
+
 		const student = await Student.findByIdAndUpdate(studentId, studentData, { new: true });
 
-		if (!student) throw new Error('Student not found');
+		if (!student) throw new Error('Error updating student');
 
 		return {
 			success: true,
@@ -151,7 +164,7 @@ export const delete_single_student = async (params: IParams) => {
 
 		const fetchStudent = await Student.findById(studentId);
 		if (!fetchStudent) throw new Error('Student not found');
-		await Student.findOneAndDelete(studentId);
+		await Student.findByIdAndDelete(studentId);
 
 		return {
 			success: true,

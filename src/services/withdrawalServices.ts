@@ -23,8 +23,8 @@ export const request_withdrawal = async (params: { data: IWithdrawal; user: { id
 		const fetchWallet = await Wallet.findOne({ userId: id });
 		if (!fetchWallet) throw new Error('Wallet not found, withdrawal cant go through');
 
-		if (withdrawalData.amount > fetchWallet.balance) throw new Error('Insufficient funds');
-		if (pendingWithdrawalAmountSum + withdrawalData.amount > fetchWallet.balance)
+		if (withdrawalData.amount > fetchWallet.balance - 5000) throw new Error('Insufficient funds');
+		if (pendingWithdrawalAmountSum + withdrawalData.amount > fetchWallet.balance - 5000)
 			throw new Error('Pending withdrawal amount exceeds available balance');
 
 		const withdrawals: IWithdrawal = await Withdrawal.create({

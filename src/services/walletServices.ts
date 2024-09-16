@@ -27,17 +27,6 @@ export const fetch_user_wallet = async (params: IParams) => {
 export const admin_fetch_user_wallet = async (params: IParams) => {
 	try {
 		const wallets = await Wallet.find();
-		// const walletsWithUserDetails = [];
-
-		// for (const wallet of wallets) {
-		// 	const user = await User.findById(wallet.userId).select('-password -otherSensitiveFields');
-		// 	if (user) {
-		// 		walletsWithUserDetails.push({
-		// 			wallet,
-		// 			user
-		// 		});
-		// 	}
-		// }
 
 		return {
 			success: true,
