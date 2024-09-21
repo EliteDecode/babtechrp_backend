@@ -6,7 +6,7 @@ export const DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const TEST = process.env.NODE_ENV === 'test';
 
 export const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
-export const SERVER_PORT = process.env.SERVER_PORT;
+export const SERVER_PORT = process.env.SERVER_PORT || 3007;
 
 //MongoDB
 export const MONGODB_URI = process.env.MONGODB_URI;
