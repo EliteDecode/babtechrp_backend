@@ -20,10 +20,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.delete_user_account = exports.change_user_password = exports.verify_user_email = exports.change_user_email = exports.update_user_details = exports.fetch_user_details = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const userModel_1 = __importDefault(require("../models/userModel"));
-const emailUtils_1 = __importDefault(require("../utils/emailUtils"));
 const authTokenModel_1 = __importDefault(require("../models/authTokenModel"));
 const tokenModel_1 = __importDefault(require("../models/tokenModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
+const emailUtils_1 = __importDefault(require("../utils/emailUtils"));
+const bstUserIdsModel_1 = __importDefault(require("../models/bstUserIdsModel"));
 const fetch_user_details = (params) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = params.user;
@@ -45,7 +46,6 @@ exports.fetch_user_details = fetch_user_details;
 const update_user_details = (params) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = params.user;
-        // const { userId } = params.query;
         const userData = params.data;
         // First, check if the user exists
         const checkUser = yield userModel_1.default.findById(id);
@@ -55,11 +55,29 @@ const update_user_details = (params) => __awaiter(void 0, void 0, void 0, functi
         if (userData.email) {
             throw new Error('Email cannot be updated');
         }
-        // // Then check for authorization
-        // if (userId !== id) {
-        // 	throw new Error('You are not authorized to update this user');
-        // }
+        // Check if username or phone already exists for another user
+        const existingUser = yield userModel_1.default.findOne({
+            $or: [{ username: userData.username }, { phone: userData.phone }],
+            _id: { $ne: id }
+        });
+        if (existingUser) {
+            if (existingUser.username === userData.username) {
+                throw new Error('Username already exists');
+            }
+            if (existingUser.phone === userData.phone) {
+                throw new Error('Phone number already exists');
+            }
+        }
+        // Rest of your function remains the same...
+        const bstUserId = yield bstUserIdsModel_1.default.findOne({ bstId: userData.bstId });
+        if (!bstUserId)
+            throw new Error('User ID not found');
+        const checkIfUserIdIsCorrect = yield bstUserIdsModel_1.default.findOne({ phone: userData.phone, bstId: userData.bstId });
+        if (!checkIfUserIdIsCorrect)
+            throw new Error('Invalid User ID Entered');
         const updateUser = yield userModel_1.default.findByIdAndUpdate(id, Object.assign(Object.assign({}, userData), { isProfileUpdated: true }), { new: true }).select('-password');
+        bstUserId.isIdUsed = true;
+        yield bstUserId.save();
         return {
             success: true,
             message: 'User details updated successfully',

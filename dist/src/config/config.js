@@ -9,7 +9,7 @@ dotenv_1.default.config();
 exports.DEVELOPMENT = process.env.NODE_ENV === 'development';
 exports.TEST = process.env.NODE_ENV === 'test';
 exports.SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
-exports.SERVER_PORT = process.env.SERVER_PORT;
+exports.SERVER_PORT = process.env.SERVER_PORT || 3007;
 //MongoDB
 exports.MONGODB_URI = process.env.MONGODB_URI;
 exports.SERVER = {

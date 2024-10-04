@@ -38,16 +38,6 @@ exports.fetch_user_wallet = fetch_user_wallet;
 const admin_fetch_user_wallet = (params) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const wallets = yield walletModel_1.default.find();
-        // const walletsWithUserDetails = [];
-        // for (const wallet of wallets) {
-        // 	const user = await User.findById(wallet.userId).select('-password -otherSensitiveFields');
-        // 	if (user) {
-        // 		walletsWithUserDetails.push({
-        // 			wallet,
-        // 			user
-        // 		});
-        // 	}
-        // }
         return {
             success: true,
             message: 'Wallets fetched successfully',

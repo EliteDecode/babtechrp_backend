@@ -21,6 +21,11 @@ const v1_1 = __importDefault(require("./routes/v1"));
 require("./config/logging");
 const node_cron_1 = __importDefault(require("node-cron"));
 const cleanUpExpiredUser_1 = require("./helpers/cleanUpExpiredUser");
+const passport_1 = __importDefault(require("passport"));
+const register_1 = require("./passport/google/register");
+const register_2 = require("./passport/facebook/register");
+const register_3 = require("./passport/instagram/register");
+const register_4 = require("./passport/github/register");
 const application = (0, express_1.default)();
 exports.application = application;
 logging.info('-------------------------------------------');
@@ -37,6 +42,13 @@ logging.info('-------------------------------------------');
 logging.info('Errors Handling');
 logging.info('-------------------------------------------');
 application.use(errorHandler_1.errorHandler);
+//InitializePassport
+application.use(passport_1.default.initialize());
+// Add strategies
+passport_1.default.use(register_1.googleStrategy);
+passport_1.default.use(register_2.facebookStrategy);
+passport_1.default.use(register_3.instagramStrategy);
+passport_1.default.use(register_4.githubStrategy);
 //v1 api routes
 application.use('/bst/v1', v1_1.default);
 //Cleanup

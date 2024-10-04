@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.corsHandler = corsHandler;
 function corsHandler(req, res, next) {
-    res.header('Access-Control-Allow-Origin', req.header('origin'));
+    const allowedOrigins = ['http://localhost:5173', 'http://localhost:3007']; // Add your allowed origins here
+    const origin = req.header('origin');
+    if (allowedOrigins.includes(origin || '')) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
     if (req.method === 'OPTIONS') {

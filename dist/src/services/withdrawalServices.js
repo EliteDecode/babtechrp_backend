@@ -32,9 +32,9 @@ const request_withdrawal = (params) => __awaiter(void 0, void 0, void 0, functio
         const fetchWallet = yield walletModel_1.default.findOne({ userId: id });
         if (!fetchWallet)
             throw new Error('Wallet not found, withdrawal cant go through');
-        if (withdrawalData.amount > fetchWallet.balance)
+        if (withdrawalData.amount > fetchWallet.balance - 5000)
             throw new Error('Insufficient funds');
-        if (pendingWithdrawalAmountSum + withdrawalData.amount > fetchWallet.balance)
+        if (pendingWithdrawalAmountSum + withdrawalData.amount > fetchWallet.balance - 5000)
             throw new Error('Pending withdrawal amount exceeds available balance');
         const withdrawals = yield withdrawalModel_1.default.create({
             userId: id,

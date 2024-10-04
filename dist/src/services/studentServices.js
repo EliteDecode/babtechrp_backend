@@ -137,9 +137,19 @@ const update_single_student = (params) => __awaiter(void 0, void 0, void 0, func
     try {
         const { studentId } = params.query;
         const studentData = params.data;
+        const fetchStudent = yield studentModel_1.default.findById(studentId);
+        if (!fetchStudent)
+            throw new Error('Student not found');
+        const checkStudentPhone = yield studentModel_1.default.findOne({
+            phone: studentData.phone,
+            _id: { $ne: studentId } // Exclude the current student by ID
+        });
+        if (checkStudentPhone) {
+            throw new Error('Phone number already in use by another student');
+        }
         const student = yield studentModel_1.default.findByIdAndUpdate(studentId, studentData, { new: true });
         if (!student)
-            throw new Error('Student not found');
+            throw new Error('Error updating student');
         return {
             success: true,
             message: 'Student updated successfully',
@@ -157,7 +167,7 @@ const delete_single_student = (params) => __awaiter(void 0, void 0, void 0, func
         const fetchStudent = yield studentModel_1.default.findById(studentId);
         if (!fetchStudent)
             throw new Error('Student not found');
-        yield studentModel_1.default.findOneAndDelete(studentId);
+        yield studentModel_1.default.findByIdAndDelete(studentId);
         return {
             success: true,
             message: 'Student deleted successfully',

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRequest = void 0;
 // Higher-order function to handle try/catch logic
 const handleRequest = (serviceFunction) => {
-    return (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const params = {
                 data: req.body,

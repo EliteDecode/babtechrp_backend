@@ -27,6 +27,8 @@ const add_Referral = (params) => __awaiter(void 0, void 0, void 0, function* () 
         const fetchUser = yield userModel_1.default.findById(id).select('-password');
         if (!fetchUser)
             throw new Error('User not found');
+        if (!(fetchUser === null || fetchUser === void 0 ? void 0 : fetchUser.isProfileUpdated))
+            throw new Error('Please update your profile before adding a referral');
         const checkIfReferralExists = yield referralModel_1.default.findOne({ referredBy: id, phone: ReferralData.phone });
         if (checkIfReferralExists)
             throw new Error('Referral with this number already exists');

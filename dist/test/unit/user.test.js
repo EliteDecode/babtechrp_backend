@@ -21,12 +21,14 @@ const authTokenModel_1 = __importDefault(require("../../src/models/authTokenMode
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const emailUtils_1 = __importDefault(require("../../src/utils/emailUtils"));
 const tokenModel_1 = __importDefault(require("../../src/models/tokenModel"));
+const bstUserIdsModel_1 = __importDefault(require("../../src/models/bstUserIdsModel"));
 const mockedId = new mongoose_1.default.Types.ObjectId();
 // Mock the necessary modules
 jest.mock('../../src/models/userModel.ts');
 jest.mock('../../src/utils/emailUtils.ts');
 jest.mock('../../src/models/authTokenModel.ts');
 jest.mock('../../src/models/tokenModel.ts');
+jest.mock('../../src/models/bstUserIdsModel.ts');
 jest.mock('bcrypt');
 jest.mock('node-cron', () => ({
     schedule: jest.fn()
@@ -42,6 +44,7 @@ const mockUser = {
     email: 'sirelite11@gmail.com',
     phone: '07030548630',
     address: '125 Ekenwan road',
+    username: 'jipovm',
     isEmailVerified: true,
     isProfileUpdated: true,
     isSuspended: false,
@@ -92,17 +95,6 @@ describe('Test for fetching user details', () => {
     }));
 });
 describe('Test for updating user details', () => {
-    // it('should return an error for unauthorized update', async () => {
-    // 	const wrongId = new mongoose.Types.ObjectId();
-    // 	const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
-    // 	const response = await supertest(application).put(`/bst/v1/user/${wrongId}`).set('Authorization', `Bearer ${accessToken}`).send({
-    // 		fullname: 'Sam Johnstone'
-    // 	});
-    // 	expect(response.status).toBe(400);
-    // 	expect(response.body).toHaveProperty('success', false);
-    // 	expect(response.body).toHaveProperty('message', 'You are not authorized to update this user');
-    // 	expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
-    // });
     it('should check for user, and throw error for not found', () => __awaiter(void 0, void 0, void 0, function* () {
         userModel_1.default.findById.mockResolvedValue(null);
         const { accessToken } = jwtUtils_1.default.generateTokens({ _id: mockedId });
@@ -126,9 +118,67 @@ describe('Test for updating user details', () => {
         expect(response.body).toHaveProperty('message', 'Email cannot be updated');
         expect(userModel_1.default.findByIdAndUpdate).not.toHaveBeenCalled();
     }));
-    it('update user successfully', () => __awaiter(void 0, void 0, void 0, function* () {
-        const mockSelect = jest.fn().mockResolvedValue(mockUser);
-        // Mock findByIdAndUpdate to return an object that has a .select() function
+    it('should throw error if username already exists', () => __awaiter(void 0, void 0, void 0, function* () {
+        userModel_1.default.findById.mockResolvedValue(mockUser);
+        userModel_1.default.findOne.mockResolvedValue(Object.assign(Object.assign({}, mockUser), { username: 'existinguser' }));
+        const { accessToken } = jwtUtils_1.default.generateTokens({ _id: mockedId });
+        const response = yield (0, supertest_1.default)(app_1.application)
+            .put(`/bst/v1/user/${mockedId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({ username: 'existinguser' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('success', false);
+        expect(response.body).toHaveProperty('message', 'Username already exists');
+        expect(userModel_1.default.findByIdAndUpdate).not.toHaveBeenCalled();
+    }));
+    it('should throw error if phone number already exists', () => __awaiter(void 0, void 0, void 0, function* () {
+        userModel_1.default.findById.mockResolvedValue(mockUser);
+        userModel_1.default.findOne.mockResolvedValue(Object.assign(Object.assign({}, mockUser), { phone: '1234567890' }));
+        const { accessToken } = jwtUtils_1.default.generateTokens({ _id: mockedId });
+        const response = yield (0, supertest_1.default)(app_1.application)
+            .put(`/bst/v1/user/${mockedId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({ phone: '1234567890' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('success', false);
+        expect(response.body).toHaveProperty('message', 'Phone number already exists');
+        expect(userModel_1.default.findByIdAndUpdate).not.toHaveBeenCalled();
+    }));
+    it('should throw error if bst id doesnt exists in the body to be updated', () => __awaiter(void 0, void 0, void 0, function* () {
+        userModel_1.default.findById.mockResolvedValue(mockUser);
+        userModel_1.default.findOne.mockResolvedValue(null);
+        bstUserIdsModel_1.default.findOne.mockResolvedValue(null);
+        const { accessToken } = jwtUtils_1.default.generateTokens({ _id: mockedId });
+        const response = yield (0, supertest_1.default)(app_1.application)
+            .put(`/bst/v1/user/${mockedId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({ bstId: 'jipov1234' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('success', false);
+        expect(response.body).toHaveProperty('message', 'User ID not found');
+        expect(userModel_1.default.findByIdAndUpdate).not.toHaveBeenCalled();
+    }));
+    it('should throw error if bst id exists but is invalid in the body to be updated', () => __awaiter(void 0, void 0, void 0, function* () {
+        userModel_1.default.findById.mockResolvedValue(mockUser);
+        userModel_1.default.findOne.mockResolvedValue(null);
+        bstUserIdsModel_1.default.findOne.mockResolvedValueOnce({ bstId: 'jipov1234' });
+        bstUserIdsModel_1.default.findOne.mockResolvedValueOnce(null);
+        const { accessToken } = jwtUtils_1.default.generateTokens({ _id: mockedId });
+        const response = yield (0, supertest_1.default)(app_1.application)
+            .put(`/bst/v1/user/${mockedId}`)
+            .set('Authorization', `Bearer ${accessToken}`)
+            .send({ bstId: 'jipov1234', phone: '1234567' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('success', false);
+        expect(response.body).toHaveProperty('message', 'Invalid User ID Entered');
+        expect(userModel_1.default.findByIdAndUpdate).not.toHaveBeenCalled();
+    }));
+    it('should update user successfully', () => __awaiter(void 0, void 0, void 0, function* () {
+        userModel_1.default.findById.mockResolvedValue(mockUser);
+        userModel_1.default.findOne.mockResolvedValue(null);
+        bstUserIdsModel_1.default.findOne.mockResolvedValueOnce({ bstId: 'validBstId', save: jest.fn() });
+        bstUserIdsModel_1.default.findOne.mockResolvedValueOnce({ phone: '1234567', bstId: 'validBstId' });
+        const mockSelect = jest.fn().mockResolvedValue(Object.assign(Object.assign({}, mockUser), { fullname: 'Sam Johnstone', isProfileUpdated: true }));
         userModel_1.default.findByIdAndUpdate.mockReturnValue({
             select: mockSelect
         });
@@ -136,14 +186,11 @@ describe('Test for updating user details', () => {
         const response = yield (0, supertest_1.default)(app_1.application)
             .put(`/bst/v1/user/${mockedId}`)
             .set('Authorization', `Bearer ${accessToken}`)
-            .send({ fullname: 'Sam Johnstone' });
-        // Assertions
+            .send({ fullname: 'Sam Johnstone', bstId: 'validBstId', phone: '1234567' });
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('success', true);
         expect(response.body).toHaveProperty('message', 'User details updated successfully');
-        // Check that findByIdAndUpdate was called with the correct parameters
-        expect(userModel_1.default.findByIdAndUpdate).toHaveBeenCalledWith(mockedId, { fullname: 'Sam Johnstone', isProfileUpdated: true }, { new: true });
-        // Ensure that .select('-password') was called
+        expect(userModel_1.default.findByIdAndUpdate).toHaveBeenCalledWith(mockedId, { fullname: 'Sam Johnstone', bstId: 'validBstId', phone: '1234567', isProfileUpdated: true }, { new: true });
         expect(mockSelect).toHaveBeenCalledWith('-password');
     }));
 });

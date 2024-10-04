@@ -12,11 +12,32 @@ const stduentRoutes_1 = __importDefault(require("./stduentRoutes"));
 const walletRoutes_1 = require("./walletRoutes");
 const withdrawalRoutes_1 = require("./withdrawalRoutes");
 const supportRoutes_1 = require("./supportRoutes");
+const bstUserIdsRoutes_1 = __importDefault(require("./bstUserIdsRoutes"));
+const google_1 = __importDefault(require("./passports/google"));
+const facebook_1 = __importDefault(require("./passports/facebook"));
+const instagram_1 = __importDefault(require("./passports/instagram"));
+const github_1 = __importDefault(require("./passports/github"));
 const router = express_1.default.Router();
 const defaultRoutes = [
     {
         path: '/auth',
         route: authRoutes_1.default
+    },
+    {
+        path: '/auth',
+        route: google_1.default
+    },
+    {
+        path: '/auth',
+        route: facebook_1.default
+    },
+    {
+        path: '/auth',
+        route: instagram_1.default
+    },
+    {
+        path: '/auth',
+        route: github_1.default
     },
     {
         path: '/user',
@@ -61,6 +82,10 @@ const defaultRoutes = [
     {
         path: '/admin/referrals',
         route: adminRoutes_1.adminReferralRoute
+    },
+    {
+        path: '/admin/bstUserIds',
+        route: bstUserIdsRoutes_1.default
     }
 ];
 defaultRoutes.forEach((route) => {
