@@ -9,6 +9,7 @@ import AuthToken from '../../src/models/authTokenModel';
 import bcrypt from 'bcrypt';
 import sendMail from '../../src/utils/emailUtils';
 import Token from '../../src/models/tokenModel';
+import BstIds from '../../src/models/bstUserIdsModel';
 
 const mockedId = new mongoose.Types.ObjectId();
 // Mock the necessary modules
@@ -16,6 +17,7 @@ jest.mock('../../src/models/userModel.ts');
 jest.mock('../../src/utils/emailUtils.ts');
 jest.mock('../../src/models/authTokenModel.ts');
 jest.mock('../../src/models/tokenModel.ts');
+jest.mock('../../src/models/bstUserIdsModel.ts');
 jest.mock('bcrypt');
 jest.mock('node-cron', () => ({
 	schedule: jest.fn()
@@ -32,6 +34,7 @@ const mockUser = {
 	email: 'sirelite11@gmail.com',
 	phone: '07030548630',
 	address: '125 Ekenwan road',
+	username: 'jipovm',
 	isEmailVerified: true,
 	isProfileUpdated: true,
 	isSuspended: false,
@@ -98,21 +101,6 @@ describe('Test for fetching user details', () => {
 });
 
 describe('Test for updating user details', () => {
-	// it('should return an error for unauthorized update', async () => {
-	// 	const wrongId = new mongoose.Types.ObjectId();
-
-	// 	const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
-
-	// 	const response = await supertest(application).put(`/bst/v1/user/${wrongId}`).set('Authorization', `Bearer ${accessToken}`).send({
-	// 		fullname: 'Sam Johnstone'
-	// 	});
-	// 	expect(response.status).toBe(400);
-	// 	expect(response.body).toHaveProperty('success', false);
-	// 	expect(response.body).toHaveProperty('message', 'You are not authorized to update this user');
-
-	// 	expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
-	// });
-
 	it('should check for user, and throw error for not found', async () => {
 		(User.findById as jest.Mock).mockResolvedValue(null);
 
@@ -145,9 +133,92 @@ describe('Test for updating user details', () => {
 		expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
 	});
 
-	it('update user successfully', async () => {
-		const mockSelect = jest.fn().mockResolvedValue(mockUser);
-		// Mock findByIdAndUpdate to return an object that has a .select() function
+	it('should throw error if username already exists', async () => {
+		(User.findById as jest.Mock).mockResolvedValue(mockUser);
+		(User.findOne as jest.Mock).mockResolvedValue({ ...mockUser, username: 'existinguser' });
+
+		const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
+
+		const response = await supertest(application)
+			.put(`/bst/v1/user/${mockedId}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send({ username: 'existinguser' });
+
+		expect(response.status).toBe(400);
+		expect(response.body).toHaveProperty('success', false);
+		expect(response.body).toHaveProperty('message', 'Username already exists');
+
+		expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
+	});
+
+	it('should throw error if phone number already exists', async () => {
+		(User.findById as jest.Mock).mockResolvedValue(mockUser);
+		(User.findOne as jest.Mock).mockResolvedValue({ ...mockUser, phone: '1234567890' });
+
+		const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
+
+		const response = await supertest(application)
+			.put(`/bst/v1/user/${mockedId}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send({ phone: '1234567890' });
+
+		expect(response.status).toBe(400);
+		expect(response.body).toHaveProperty('success', false);
+		expect(response.body).toHaveProperty('message', 'Phone number already exists');
+
+		expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
+	});
+
+	it('should throw error if bst id doesnt exists in the body to be updated', async () => {
+		(User.findById as jest.Mock).mockResolvedValue(mockUser);
+		(User.findOne as jest.Mock).mockResolvedValue(null);
+		(BstIds.findOne as jest.Mock).mockResolvedValue(null);
+
+		const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
+
+		const response = await supertest(application)
+			.put(`/bst/v1/user/${mockedId}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send({ bstId: 'jipov1234' });
+
+		expect(response.status).toBe(400);
+		expect(response.body).toHaveProperty('success', false);
+		expect(response.body).toHaveProperty('message', 'User ID not found');
+		expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
+	});
+
+	it('should throw error if bst id exists but is invalid in the body to be updated', async () => {
+		(User.findById as jest.Mock).mockResolvedValue(mockUser);
+		(User.findOne as jest.Mock).mockResolvedValue(null);
+		(BstIds.findOne as jest.Mock).mockResolvedValueOnce({ bstId: 'jipov1234' });
+		(BstIds.findOne as jest.Mock).mockResolvedValueOnce(null);
+
+		const { accessToken } = jwtUtils.generateTokens({ _id: mockedId } as any);
+
+		const response = await supertest(application)
+			.put(`/bst/v1/user/${mockedId}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send({ bstId: 'jipov1234', phone: '1234567' });
+
+		expect(response.status).toBe(400);
+		expect(response.body).toHaveProperty('success', false);
+		expect(response.body).toHaveProperty('message', 'Invalid User ID Entered');
+
+		expect(User.findByIdAndUpdate).not.toHaveBeenCalled();
+	});
+
+	it('should update user successfully', async () => {
+		(User.findById as jest.Mock).mockResolvedValue(mockUser);
+		(User.findOne as jest.Mock).mockResolvedValue(null);
+		(BstIds.findOne as jest.Mock).mockResolvedValueOnce({ bstId: 'validBstId', save: jest.fn() });
+		(BstIds.findOne as jest.Mock).mockResolvedValueOnce({ phone: '1234567', bstId: 'validBstId' });
+
+		const mockSelect = jest.fn().mockResolvedValue({
+			...mockUser,
+			fullname: 'Sam Johnstone',
+			isProfileUpdated: true
+		});
+
 		(User.findByIdAndUpdate as jest.Mock).mockReturnValue({
 			select: mockSelect
 		});
@@ -157,17 +228,18 @@ describe('Test for updating user details', () => {
 		const response = await supertest(application)
 			.put(`/bst/v1/user/${mockedId}`)
 			.set('Authorization', `Bearer ${accessToken}`)
-			.send({ fullname: 'Sam Johnstone' });
+			.send({ fullname: 'Sam Johnstone', bstId: 'validBstId', phone: '1234567' });
 
-		// Assertions
 		expect(response.status).toBe(200);
 		expect(response.body).toHaveProperty('success', true);
 		expect(response.body).toHaveProperty('message', 'User details updated successfully');
 
-		// Check that findByIdAndUpdate was called with the correct parameters
-		expect(User.findByIdAndUpdate).toHaveBeenCalledWith(mockedId, { fullname: 'Sam Johnstone', isProfileUpdated: true }, { new: true });
+		expect(User.findByIdAndUpdate).toHaveBeenCalledWith(
+			mockedId,
+			{ fullname: 'Sam Johnstone', bstId: 'validBstId', phone: '1234567', isProfileUpdated: true },
+			{ new: true }
+		);
 
-		// Ensure that .select('-password') was called
 		expect(mockSelect).toHaveBeenCalledWith('-password');
 	});
 });

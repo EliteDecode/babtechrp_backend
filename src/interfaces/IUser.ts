@@ -9,6 +9,10 @@ export interface IUser extends Document {
 	phone?: string;
 	username?: string;
 	address?: string;
+	googleId?: string;
+	facebookId?: string;
+	githubId?: string;
+	instagramId?: string;
 	isEmailVerified?: boolean;
 	isProfileUpdated?: boolean;
 	isSuspended?: boolean;

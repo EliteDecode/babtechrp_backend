@@ -6,6 +6,11 @@ import routes from './routes/v1';
 import './config/logging';
 import cron from 'node-cron';
 import { cleanupExpiredTokens } from './helpers/cleanUpExpiredUser';
+import passport from 'passport';
+import { googleStrategy } from './passport/google/register';
+import { facebookStrategy } from './passport/facebook/register';
+import { instagramStrategy } from './passport/instagram/register';
+import { githubStrategy } from './passport/github/register';
 
 const application = express();
 
@@ -25,6 +30,15 @@ logging.info('-------------------------------------------');
 logging.info('Errors Handling');
 logging.info('-------------------------------------------');
 application.use(errorHandler);
+
+//InitializePassport
+application.use(passport.initialize());
+
+// Add strategies
+passport.use(googleStrategy);
+passport.use(facebookStrategy);
+passport.use(instagramStrategy);
+passport.use(githubStrategy);
 
 //v1 api routes
 application.use('/bst/v1', routes);

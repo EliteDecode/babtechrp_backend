@@ -35,11 +35,10 @@ export const fetch_user_details = async (params: IParams) => {
 export const update_user_details = async (params: { data: IUpdateUser; user: { id: string } }) => {
 	try {
 		const { id } = params.user;
-		// const { userId } = params.query;
 		const userData = params.data;
+
 		// First, check if the user exists
 		const checkUser = await User.findById(id);
-
 		if (!checkUser) {
 			throw new Error('User not found');
 		}
@@ -47,11 +46,27 @@ export const update_user_details = async (params: { data: IUpdateUser; user: { i
 		if (userData.email) {
 			throw new Error('Email cannot be updated');
 		}
+
+		// Check if username or phone already exists for another user
+		const existingUser = await User.findOne({
+			$or: [{ username: userData.username }, { phone: userData.phone }],
+			_id: { $ne: id }
+		});
+
+		if (existingUser) {
+			if (existingUser.username === userData.username) {
+				throw new Error('Username already exists');
+			}
+			if (existingUser.phone === userData.phone) {
+				throw new Error('Phone number already exists');
+			}
+		}
+
+		// Rest of your function remains the same...
 		const bstUserId = await bstUserIds.findOne({ bstId: userData.bstId });
 		if (!bstUserId) throw new Error('User ID not found');
 
-		const checkIfUserIdIsCorrect = await bstUserIds.findOne({ $or: [{ phone: userData.phone }, { email: userData.email }] });
-
+		const checkIfUserIdIsCorrect = await bstUserIds.findOne({ phone: userData.phone, bstId: userData.bstId });
 		if (!checkIfUserIdIsCorrect) throw new Error('Invalid User ID Entered');
 
 		const updateUser = await User.findByIdAndUpdate(id, { ...userData, isProfileUpdated: true }, { new: true }).select('-password');

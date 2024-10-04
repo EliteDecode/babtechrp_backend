@@ -3,13 +3,9 @@ import jwtUtils from '../utils/jwtUtils';
 import { IUser } from '../interfaces/IUser';
 import { JwtPayload } from 'jsonwebtoken';
 import userModel from '../models/userModel';
+import { RequestCustom } from '../types/express';
 
-// Extending the Request interface
-interface AuthenticatedRequest extends Request {
-	user?: IUser;
-}
-
-const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: RequestCustom, res: Response, next: NextFunction) => {
 	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
 		try {
 			const data = {

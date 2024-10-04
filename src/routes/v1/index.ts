@@ -9,6 +9,10 @@ import { walletRoute } from './walletRoutes';
 import { withdrawalRoute } from './withdrawalRoutes';
 import { supportRoute } from './supportRoutes';
 import bstUserIdsRoutes from './bstUserIdsRoutes';
+import googleRoutes from './passports/google';
+import facebookRoutes from './passports/facebook';
+import instagramRoutes from './passports/instagram';
+import githubRoutes from './passports/github';
 
 const router = express.Router();
 
@@ -16,6 +20,22 @@ const defaultRoutes = [
 	{
 		path: '/auth',
 		route: authRoutes
+	},
+	{
+		path: '/auth',
+		route: googleRoutes
+	},
+	{
+		path: '/auth',
+		route: facebookRoutes
+	},
+	{
+		path: '/auth',
+		route: instagramRoutes
+	},
+	{
+		path: '/auth',
+		route: githubRoutes
 	},
 	{
 		path: '/user',

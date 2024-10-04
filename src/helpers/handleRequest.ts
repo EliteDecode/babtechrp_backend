@@ -1,9 +1,9 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { RequestCustom } from '../types/express';
 
 // Higher-order function to handle try/catch logic
 export const handleRequest = (serviceFunction: (body: any) => Promise<any>) => {
-	return async (req: RequestCustom, res: Response) => {
+	return async (req: RequestCustom, res: Response, next: NextFunction) => {
 		try {
 			const params = {
 				data: req.body,

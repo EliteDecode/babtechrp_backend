@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">18.51% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/75</span>
+                <span class='fraction'>15/81</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.39% </span>
+                <span class="strong">15.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/61</span>
+                <span class='fraction'>10/66</span>
             </div>
         
             
@@ -227,7 +227,20 @@
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,6 +372,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -524,9 +550,22 @@ export const update_single_student = <span class="fstat-no" title="function not 
 		const { studentId } = <span class="cstat-no" title="statement not covered" >params.query;</span>
 		const studentData = <span class="cstat-no" title="statement not covered" >params.data;</span>
 &nbsp;
+		const fetchStudent = <span class="cstat-no" title="statement not covered" >await Student.findById(studentId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (!fetchStudent) <span class="cstat-no" title="statement not covered" >throw new Error('Student not found');</span></span>
+&nbsp;
+		const checkStudentPhone = <span class="cstat-no" title="statement not covered" >await Student.findOne({</span>
+			phone: studentData.phone,
+			_id: { $ne: studentId } // Exclude the current student by ID
+		});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (checkStudentPhone) {</span>
+<span class="cstat-no" title="statement not covered" >			throw new Error('Phone number already in use by another student');</span>
+		}
+&nbsp;
 		const student = <span class="cstat-no" title="statement not covered" >await Student.findByIdAndUpdate(studentId, studentData, { new: true });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (!student) <span class="cstat-no" title="statement not covered" >throw new Error('Student not found');</span></span>
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (!student) <span class="cstat-no" title="statement not covered" >throw new Error('Error updating student');</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >		return {</span>
 			success: true,
@@ -544,7 +583,7 @@ export const delete_single_student = <span class="fstat-no" title="function not 
 &nbsp;
 		const fetchStudent = <span class="cstat-no" title="statement not covered" >await Student.findById(studentId);</span>
 <span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (!fetchStudent) <span class="cstat-no" title="statement not covered" >throw new Error('Student not found');</span></span>
-<span class="cstat-no" title="statement not covered" >		await Student.findOneAndDelete(studentId);</span>
+<span class="cstat-no" title="statement not covered" >		await Student.findByIdAndDelete(studentId);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >		return {</span>
 			success: true,
@@ -562,7 +601,7 @@ export const delete_single_student = <span class="fstat-no" title="function not 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-08T16:11:50.893Z
+                at 2024-10-03T23:24:57.933Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
