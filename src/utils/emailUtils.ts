@@ -8,17 +8,17 @@ interface MailOptions {
 
 const sendMail = async ({ email, subject, text }: MailOptions): Promise<void> => {
 	const transporter = nodemailer.createTransport({
-		host: 'premium283.web-hosting.com',
+		host: 'smtp.spacemail.com',
 		port: 465,
-		secure: true, // true for 465, false for other ports
+		secure: true,
 		auth: {
-			user: 'testing@purplebeetech.com', // your cPanel email address
-			pass: 'In[d$I~R-;2}' // your cPanel email password
+			user: process.env.SMTP_USER,
+			pass: process.env.SMTP_PASS
 		}
 	});
 
 	await transporter.sendMail({
-		from: 'testing@purplebeetech.com',
+		from: `"BST" <${process.env.SMTP_USER}>`,
 		to: email,
 		subject: subject,
 		html: text
