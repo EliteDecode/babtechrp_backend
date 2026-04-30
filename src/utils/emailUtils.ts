@@ -8,7 +8,7 @@ interface MailOptions {
 
 const sendMail = async ({ email, subject, text }: MailOptions): Promise<void> => {
 	const transporter = nodemailer.createTransport({
-		host: 'smtp.spacemail.com',
+		host: 'mail.privateemail.com',
 		port: 465,
 		secure: true,
 		auth: {
